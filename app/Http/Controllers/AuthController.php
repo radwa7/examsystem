@@ -20,7 +20,7 @@ class AuthController extends Controller
             ,200);
     }
 
-    public function register(Request $request)
+    public function registerUser(Request $request)
     {
         
         $data = $request->validate([
@@ -33,14 +33,13 @@ class AuthController extends Controller
             'full_name' => $data['full_name'],
             'email'     => $data['email'],
             'password'  => bcrypt($data['password']),
-            'role'      => 'user'
+            'role'      => 'teacher',
+            'status'    => 'deactivated'
         ]);
 
-        $token = $user->createToken('myappToken')->plainTextToken;
-
+        
         $response = [
-            'user'  => $user,
-            'token' => $token
+            'user'  => $user,            
         ];
 
         return response()->json($response,201);
@@ -65,12 +64,19 @@ class AuthController extends Controller
         }else {
             //checks password
             if (Hash::check($data['password'],$user->password)){
-                $token = $user->createToken('myappToken')->plainTextToken;
-                $response = [
-                    'user'  => $user,
-                    'token' => $token
-                ]; 
-                $code = 201;
+                //checks if account is activated befor loging in
+                if ($user->status == 'active') {
+                    $token = $user->createToken('myappToken')->plainTextToken;
+                    $response = [
+                        'user'  => $user,
+                        'token' => $token
+                    ]; 
+                    $code = 201;
+                }else{
+                    $response = ['message' => 'please activate account before logining in'];
+                    $code = 403;
+                }
+                
             }else {
                 $response = ['message' => 'password incorrect'];
                 $code = 401;

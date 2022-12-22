@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 //public routes
 
-Route::post('/register', [App\Http\Controllers\AuthController::class,'register']);
+Route::post('/registerUser', [App\Http\Controllers\AuthController::class,'registerUser']);
 Route::post('/login', [App\Http\Controllers\AuthController::class,'login']);
 
 
