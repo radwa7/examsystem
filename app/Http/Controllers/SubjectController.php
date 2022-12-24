@@ -15,8 +15,9 @@ class SubjectController extends Controller
     public function createSub(Request $request)
     {
         
+        
         $subject = $request->validate([
-            'subject_name'  => 'required|string|unique:subject,subject_name',
+            'subject_name'  => 'required|string|unique:subjects,subject_name',
             
         ]);
         
