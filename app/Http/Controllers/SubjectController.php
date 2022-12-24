@@ -16,7 +16,7 @@ class SubjectController extends Controller
     {
         
         $subject = $request->validate([
-            'subject_name'  => 'required|string',
+            'subject_name'  => 'required|string|unique:subject,subject_name',
             
         ]);
         
@@ -33,20 +33,33 @@ class SubjectController extends Controller
     public function assignSub(Request $request)
     {
         $assigned = $request->validate([
-            'teacher_id' => 'required',
-            'subject_id' => 'required'              
+            'teacher_id' => 'required|exists:users,id',
+            'subject_id' => 'required|exists:subjects,id'              
         ]);
 
-        $assigned = Subjectsassign::create([
-            'teacher_id' => $assigned['teacher_id'],
-            'subject_id' => $assigned['subject_id'],
-            'author_id'  => Auth::user()->id ,
-        ]);
+        $teacher = User::findOrFail($assigned['teacher_id']);
+        if ($teacher->role =='teacher') {
+            $assigned = Subjectsassign::create([
+                'teacher_id' => $assigned['teacher_id'],
+                'subject_id' => $assigned['subject_id'],
+                'author_id'  => Auth::user()->id ,
+            ]);
+    
+            $teacher = User::find($request->teacher_id);
+            $teacher->update(['status', 'active']);
+    
+            return response()->json('teacher assgined subject',200);  
+        }else {
+            return response()->json("cannot assign subject to admin",406);
+        }
 
-        $teacher = User::find($request->teacher_id);
-        $teacher->update(['status', 'active']);
+        
+    }
 
-        return response()->json('teacher assgined subject',200);
+    public function getSubjects()
+    {
+        $subjects = Subject::all();
+        return response()->json($subjects,200);
     }
 
 

@@ -18,6 +18,9 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::post('/registerUser', [App\Http\Controllers\AuthController::class,'registerUser']);
         Route::post('createSub',[App\Http\Controllers\SubjectController::class,'createSub']);
         Route::post('assignSub',[App\Http\Controllers\SubjectController::class,'assignSub']);
+        Route::get('getTeachers',[App\Http\Controllers\SubjectController::class,'getTeachers']);
+        Route::get('getSubjects',[App\Http\Controllers\SubjectController::class,'getSubjects']);
+
 
     });
     Route::get('/test', [App\Http\Controllers\AuthController::class,'test']);
