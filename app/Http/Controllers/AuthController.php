@@ -106,7 +106,7 @@ class AuthController extends Controller
     {
        
         $user = User::findOrFail($request->id);
-        $user = $user->update($request->all());
+        $user->update($request->all());
         return response()->json($user,200);
 
     }
