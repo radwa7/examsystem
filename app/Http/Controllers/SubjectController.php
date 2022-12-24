@@ -47,7 +47,7 @@ class SubjectController extends Controller
             ]);
     
             $teacher = User::find($request->teacher_id);
-            $teacher->update(['status', 'active']);
+            $teacher->update(['status' => 'active']);
     
             return response()->json('teacher assgined subject',200);  
         }else {
