@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -12,7 +13,7 @@ class AuthController extends Controller
     
     public function test()
     {
-       
+     
         return response()->json(
             [
                 'message' => 'Hello',
@@ -34,7 +35,8 @@ class AuthController extends Controller
             'email'     => $data['email'],
             'password'  => bcrypt($data['password']),
             'role'      => 'teacher',
-            'status'    => 'deactivated'
+            'status'    => 'deactivated',
+            'author_id' => Auth::user()->id,
         ]);
 
         
@@ -92,6 +94,21 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Logged Out'
         ],200);
+    }
+
+    public function profile()
+    {
+        $user = Auth::user();
+        return response()->json($user);
+    }
+
+    public function editProfile(Request $request)
+    {
+       
+        $user = User::findOrFail($request->id);
+        $user = $user->update($request->all());
+        return response()->json($user,200);
+
     }
 
 }
