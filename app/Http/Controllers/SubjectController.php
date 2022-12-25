@@ -7,6 +7,7 @@ use App\Models\Subjectsassign;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redis;
 use Laravel\Sanctum\Sanctum;
 
 class SubjectController extends Controller
@@ -55,6 +56,23 @@ class SubjectController extends Controller
         }
 
         
+    }
+
+    public function assignAll(Request $request)
+    {
+        
+        foreach($request->teachersIds as $teacherId){
+            foreach ($request->subjectsIds as $subjectId ) {
+                
+                $assigned = Subjectsassign::create([
+                    'teacher_id' => $teacherId,
+                    'subject_id' => $subjectId,
+                    'author_id'  => Auth::user()->id ,
+                ]);
+            }
+        }
+        return response()->json($assigned);
+
     }
 
     public function getSubjects()
