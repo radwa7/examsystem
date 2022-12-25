@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::post('/login', [App\Http\Controllers\AuthController::class,'login']);
+Route::post('/checkEmail', [App\Http\Controllers\AuthController::class,'checkEmail']);
+Route::post('/resetPassword', [App\Http\Controllers\AuthController::class,'resetPass']);
 
 
 

@@ -111,4 +111,19 @@ class AuthController extends Controller
 
     }
 
+    public function checkEmail(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|exists:users,email'
+        ]);
+        return response($request->email,200);
+    }
+
+    public function resetPass(Request $request)
+    {
+        $user = User::where('email',$request->email);
+        $user->update(['password' => $request->password]);
+        return response()->json('password changed',200);
+    }
+
 }
