@@ -70,6 +70,8 @@ class SubjectController extends Controller
                     'author_id'  => Auth::user()->id ,
                 ]);
             }
+            $teacher = User::find($teacherId);
+            $teacher->update(['status' => 'active']);
         }
         return response()->json($assigned);
 
