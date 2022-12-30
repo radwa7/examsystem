@@ -21,8 +21,9 @@ class TeacherController extends Controller
         $subs = Subjectsassign::all()->where('teacher_id',$teacher->id);
         $subjects_names =array();
 
-        foreach ($subs as $sub => $subject_id) {
-            $subjects = Subject::find($subject_id);
+        foreach ($subs as $sub ) {
+            $subjects = Subject::get()->where('id',$sub->subject_id);
+            // dd($subjects);
             foreach ($subjects as $subject => $subject_name) {
                 
                 array_push($subjects_names,$subject_name->subject_name);
