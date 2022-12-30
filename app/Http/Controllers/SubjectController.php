@@ -60,7 +60,7 @@ class SubjectController extends Controller
 
     public function assignAll(Request $request)
     {
-        
+        $array = array();
         foreach($request->teachersIds as $teacherId){
             foreach ($request->subjectsIds as $subjectId ) {
                 
@@ -69,11 +69,22 @@ class SubjectController extends Controller
                     'subject_id' => $subjectId,
                     'author_id'  => Auth::user()->id ,
                 ]);
+                
+                array_push($array,$assigned);
             }
             $teacher = User::find($teacherId);
             $teacher->update(['status' => 'active']);
         }
-        return response()->json($assigned);
+        $res = array();
+        foreach ($array as $key) {
+            $sub = Subject::find($key->subject_id);
+            $response =[
+                'teacher_id' => $key->teacher_id,
+                'subject'   => $sub->subject_name,
+            ] ;
+            array_push($res,$response);
+        }
+        return response()->json($res);
 
     }
 
