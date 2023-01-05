@@ -28,13 +28,14 @@ class AuthController extends Controller
             'full_name' => 'required|string',
             'email'     => 'required|string|email|unique:users,email',
             'password'  => 'required|string|confirmed',
+            'role'      => 'required|'
         ]);
 
         $user = User::create([
             'full_name' => $data['full_name'],
             'email'     => $data['email'],
             'password'  => bcrypt($data['password']),
-            'role'      => 'teacher',
+            'role'      => $data['role'],
             'status'    => 'deactivated',
             'author_id' => Auth::user()->id,
         ]);
@@ -107,7 +108,7 @@ class AuthController extends Controller
        
         $user = User::findOrFail($request->id);
         $user->update($request->all());
-        return response()->json($user,200);
+        return response()->json(['user'=>$user],200);
 
     }
 
@@ -116,14 +117,22 @@ class AuthController extends Controller
         $request->validate([
             'email' => 'required|exists:users,email'
         ]);
-        return response($request->email,200);
+        return response()->json(['email'=>$request->email],200);
     }
 
     public function resetPass(Request $request)
     {
         $user = User::where('email',$request->email);
-        $user->update(['password' => $request->password]);
-        return response()->json('password changed',200);
+        if (Auth::user()->role == 'admin'||Auth::user()->id == $user->id) {
+            $user->update(['password' => Hash::make($request->password)]);
+            if (Auth::user()->role == 'admin') {
+                $user->update(['status' =>'deactivated' ]); 
+            }
+            return response()->json(['response'=>'password changed'],200);
+        }
+        else {
+            return response()->json(['message' => 'not authorized'],200);
+        }
     }
 
 }
