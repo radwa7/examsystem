@@ -12,6 +12,6 @@ class Clo extends Model
     protected $fillable = [
         'clo_name',
         'subject_id',
-        'auhtor_id',
+        'author_id',
     ];
 }

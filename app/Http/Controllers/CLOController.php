@@ -6,26 +6,35 @@ use App\Models\Clo;
 use App\Models\Subject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Mockery\Matcher\Subset;
 
 class CLOController extends Controller
 {
     public function createClo(Request $request)
     {
+        $array = array();
+        
         $data = $request->validate([
-            'clo_name'    => 'required|string|',
             'subject_id'  => 'required|exists:subjects,id',
+            'clo_names'    => 'required',
+        ]);
+        foreach($request->clo_names as $clo_name){
+            $subs = array();
             
-        ]);
-
-        $clo = Clo::create([
-            'clo_name' => $data['clo_name'],
-            'subject_id' => $data['subject_id'],
-            'author_id' => Auth::user()->id,
-        ]);
+            $clo = Clo::create([
+                'clo_name' => $clo_name,
+                'subject_id' => $data['subject_id'],
+                'author_id' => Auth::user()->id,
+            ]);
+            $subject = Subject::findOrFail($data['subject_id']);
+            $clo['subject_name'] = $subject->subject_name;
+            array_push($array,$clo);
+        }
+        
 
        
         return response()->json(
-            ['clo'=>$clo]
+            ['clos'=>$array]
         ,200);
     }
 
