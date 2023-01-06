@@ -33,8 +33,9 @@ Route::middleware('auth:sanctum')->group(function(){
         
         //teacher
         Route::get('getTeachers',[App\Http\Controllers\TeacherController::class,'getTeachers']);
-        Route::get('getTeacher/{tcrId}',[App\Http\Controllers\TeacherController::class,'getTeacher']);
-        
+        Route::get('getTeacher',[App\Http\Controllers\TeacherController::class,'getTeacher']);
+        Route::post('editTeacher',[App\Http\Controllers\AdminController::class,'editTeacher']);
+        Route::post('deleteTeacher',[App\Http\Controllers\AdminController::class,'deleteTeacher']);
         
         //subject
         Route::post('createSub',[App\Http\Controllers\SubjectController::class,'createSub']);

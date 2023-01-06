@@ -53,7 +53,7 @@ class AdminController extends Controller
         $admin->update($new_admin);
         return response()->json(
             ['message'=>'admin updated']
-            ,200);
+        ,200);
     }
 
     public function deleteAdmin(Request $request)

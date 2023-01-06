@@ -15,9 +15,9 @@ class TeacherController extends Controller
         return response()->json($teachers,200);
     }
 
-    public function getTeacher($tcrId)
+    public function getTeacher(Request $request)
     {   
-        $teacher = User::findOrFail($tcrId);
+        $teacher = User::findOrFail($request->id);
         $subs = Subjectsassign::all()->where('teacher_id',$teacher->id);
         $subjects_names =array();
 
@@ -36,6 +36,32 @@ class TeacherController extends Controller
         return response()->json([
             'teacher' => $teacher
         ],200);
+    }
+
+    public function editTeacher(Request $request)
+    {
+        $new_teacher = $request->validate([
+            'id'        => 'exists:users,id',
+            'full_name' => 'required|string',
+            'email'     => 'required|string|email|exists:users,email',
+           
+        ]);  
+        
+        $teacher = User::findOrFail($request->id);
+        $teacher->update($new_teacher);
+        return response()->json(
+            ['message'=>'teacher updated']
+        ,200);
+    }
+
+    public function deleteTeacher(Request $request)
+    {
+        $teacher = User::findOrFail($request->id);
+        $teacher->delete();
+        return response()->json([
+            'message' => 'teacher deleted'
+        ],200);
+        
     }
 }
 
