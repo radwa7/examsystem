@@ -39,8 +39,11 @@ Route::middleware('auth:sanctum')->group(function(){
         
         //subject
         Route::post('createSub',[App\Http\Controllers\SubjectController::class,'createSub']);
-        Route::post('assignSub',[App\Http\Controllers\SubjectController::class,'assignSub']);
         Route::get('getSubjects',[App\Http\Controllers\SubjectController::class,'getSubjects']);
+        Route::get('getSubject',[App\Http\Controllers\SubjectController::class,'getSubject']);
+        Route::post('editSubject',[App\Http\Controllers\SubjectController::class,'editSubject']);
+        Route::post('deleteSubject',[App\Http\Controllers\SubjectController::class,'deleteSubject']);
+        Route::post('assignSub',[App\Http\Controllers\SubjectController::class,'assignSub']);
         Route::post('assignAll',[App\Http\Controllers\SubjectController::class,'assignAll']);
 
 

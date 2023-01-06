@@ -29,7 +29,48 @@ class SubjectController extends Controller
 
         ]);
 
-        return response()->json($subject,201);
+        return response()->json([
+            'subject' => $subject
+        ],201);
+    }
+
+    public function getSubjects()
+    {
+        $subjects = Subject::all();
+        return response()->json($subjects,200);
+    }
+
+    public function getSubject(Request $request)
+    {
+        $subject = Subject::findOrFail($request->id);
+        return response()->json([
+            'subject' => $subject
+        ],200);
+    }
+
+    public function editSubject(Request $request)
+    {
+        $new_subject = $request->validate([
+            'id'            => 'exists:users,id',
+            'subject_name'  => 'required|string|exists:subjects,subject_name',
+           
+        ]);  
+        
+        $subject = Subject::findOrFail($request->id);
+        $subject->update($new_subject);
+        return response()->json(
+            ['message'=>'subject updated']
+        ,200);
+    }
+
+    public function deleteSubject(Request $request)
+    {
+        $subject = Subject::findOrFail($request->id);
+        $subject->delete();
+        return response()->json([
+            'message' => 'subject deleted'
+        ],200);
+        
     }
 
     public function assignSub(Request $request)
@@ -88,11 +129,7 @@ class SubjectController extends Controller
 
     }
 
-    public function getSubjects()
-    {
-        $subjects = Subject::all();
-        return response()->json($subjects,200);
-    }
+    
 
 
 }
