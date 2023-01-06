@@ -10,13 +10,21 @@ class AdminController extends Controller
     public function getAdmins()
     {
         $admins = User::all()->where('role','admin');
-        return response(['Admins'=>$admins],200);
+        $array = array();
+        foreach($admins as $admin){
+            array_push($array,$admin);
+        }
+        return response(['Admins'=>$array],200);
     }
 
     public function getUsers()
     {
         $users = User::all();
-        return response(['Users'=>$users],200);
+        $array = array();
+        foreach($users as $user){
+            array_push($array,$user);
+        }
+        return response(['Users'=>$array],200);
     }
 
     public function getAdmin(Request $request)

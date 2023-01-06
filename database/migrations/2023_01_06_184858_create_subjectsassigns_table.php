@@ -19,12 +19,9 @@ return new class extends Migration
             $table->string('teacher_id');
             $table->string('author_id');
             $table->timestamps();
-
         });
     }
 
-
-    
     /**
      * Reverse the migrations.
      *
@@ -32,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('subjectsassigns');
     }
 };

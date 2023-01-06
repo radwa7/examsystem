@@ -12,7 +12,13 @@ class TeacherController extends Controller
     public function getTeachers()
     {
         $teachers = User::all()->where('role','teacher')->values();
-        return response()->json($teachers,200);
+        $array = array();
+        foreach ($teachers as $teacher) {
+            array_push($array,$teacher);
+        }
+        return response()->json(
+            ['teachers'=>$array]
+            ,200);
     }
 
     public function getTeacher(Request $request)

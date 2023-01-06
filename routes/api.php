@@ -38,7 +38,7 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::post('deleteTeacher',[App\Http\Controllers\AdminController::class,'deleteTeacher']);
         
         //subject
-        Route::post('createSub',[App\Http\Controllers\SubjectController::class,'createSub']);
+        Route::post('createSubject',[App\Http\Controllers\SubjectController::class,'createSub']);
         Route::get('getSubjects',[App\Http\Controllers\SubjectController::class,'getSubjects']);
         Route::get('getSubject',[App\Http\Controllers\SubjectController::class,'getSubject']);
         Route::post('editSubject',[App\Http\Controllers\SubjectController::class,'editSubject']);
@@ -48,6 +48,15 @@ Route::middleware('auth:sanctum')->group(function(){
 
 
     });
+    //CLOs
+    Route::get('getClos',[App\Http\Controllers\CLOController::class,'getClos']);
+    Route::get('getClo',[App\Http\Controllers\CLOController::class,'getClo']);
+    Route::get('getSubClo',[App\Http\Controllers\CLOController::class,'getSubClo']);
+    Route::post('createClo',[App\Http\Controllers\CLOController::class,'createClo']);
+    Route::post('editClo',[App\Http\Controllers\CLOController::class,'editClo']);
+    Route::post('deleteClo',[App\Http\Controllers\CLOController::class,'deleteClo']);
+    
+
     
     Route::post('/logout', [App\Http\Controllers\AuthController::class,'logout']);
     Route::get('/profile', [App\Http\Controllers\AuthController::class,'profile']);

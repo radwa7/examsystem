@@ -37,7 +37,11 @@ class SubjectController extends Controller
     public function getSubjects()
     {
         $subjects = Subject::all();
-        return response()->json($subjects,200);
+        $array = array();
+        foreach($subjects as $subject){
+            array_push($array,$subject);
+        }
+        return response()->json(['subjects'=> $array],200);
     }
 
     public function getSubject(Request $request)
