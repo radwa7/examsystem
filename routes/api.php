@@ -57,6 +57,9 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::post('deleteClo',[App\Http\Controllers\CLOController::class,'deleteClo']);
     
 
+    //Questions
+    Route::post('createQuestion',[App\Http\Controllers\QuestionController::class,'createQuestion']);
+
 
     Route::post('/logout', [App\Http\Controllers\AuthController::class,'logout']);
     Route::get('/profile', [App\Http\Controllers\AuthController::class,'profile']);
