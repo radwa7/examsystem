@@ -52,7 +52,7 @@ class QuestionController extends Controller
             ]);
 
             $answer = TextAnswer::create([
-                'body'        => $answer['body'],
+                'body'        => $answer['answer_body'],
                 'question_id' => $question->id,
             ]);
             $question['answer'] = $answer ;
