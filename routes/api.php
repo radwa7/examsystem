@@ -59,6 +59,11 @@ Route::middleware('auth:sanctum')->group(function(){
 
     //Questions
     Route::post('createQuestion',[App\Http\Controllers\QuestionController::class,'createQuestion']);
+    Route::get('getAllQuestions',[App\Http\Controllers\QuestionController::class,'getAllQuestions']);
+    Route::post('getSubQuestions',[App\Http\Controllers\QuestionController::class,'getSubQuestions']);
+    Route::post('getCloQuestions',[App\Http\Controllers\QuestionController::class,'getCloQuestions']);
+    Route::post('getQuestion',[App\Http\Controllers\QuestionController::class,'getQuestion']);
+    Route::post('getQuestion',[App\Http\Controllers\QuestionController::class,'getQuestion']);
 
 
     Route::post('/logout', [App\Http\Controllers\AuthController::class,'logout']);
