@@ -194,4 +194,29 @@ class QuestionController extends Controller
     }
 
 
+    public function editQuestion(Request $request)
+    {
+        $new_subject = $request->validate([
+            'id'            => 'exists:users,id',
+            'subject_name'  => 'required|string|exists:subjects,subject_name',
+           
+        ]);  
+        
+        $subject = Subject::findOrFail($request->id);
+        $subject->update($new_subject);
+        return response()->json(
+            ['message'=>'subject updated']
+        ,200);
+    }
+
+    public function deleteQuestion(Request $request)
+    {
+        $question = Question::findOrFail($request->question_id);
+        $question->delete();
+        return response()->json([
+            'message' => 'question deleted'
+        ],200);
+    }
+
+
 }

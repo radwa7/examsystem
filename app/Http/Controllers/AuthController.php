@@ -123,6 +123,7 @@ class AuthController extends Controller
     public function resetPass(Request $request)
     {
         $user = User::where('email',$request->email);
+        var_dump(Auth::user()->role);
         if (Auth::user()->role == 'admin'||Auth::user()->id == $user->id) {
             $user->update(['password' => Hash::make($request->password)]);
             if (Auth::user()->role == 'admin') {

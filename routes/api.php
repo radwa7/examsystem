@@ -9,12 +9,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [App\Http\Controllers\AuthController::class,'login']);
 Route::post('/checkEmail', [App\Http\Controllers\AuthController::class,'checkEmail']);
-Route::post('/resetPassword', [App\Http\Controllers\AuthController::class,'resetPass']);
 
 
 
 //authentiaction protected routes
 Route::middleware('auth:sanctum')->group(function(){
+    Route::post('/resetPassword', [App\Http\Controllers\AuthController::class,'resetPass']);
     //admin only routes
     Route::middleware('isAdmin')->group(function(){
         
