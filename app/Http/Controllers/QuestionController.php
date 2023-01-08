@@ -16,8 +16,7 @@ class QuestionController extends Controller
 {
     public function createQuestion(Request $request)
     {
-        // var_dump($request->all());
-        
+                
         $question = $request->validate([
             'body'        => 'required|string|unique:questions,body',
             'subject_id'  => 'required|exists:subjects,id',
@@ -165,8 +164,10 @@ class QuestionController extends Controller
 
     public function getCloQuestions(Request $request)
     {
-        $clo = Clo::findOrFail($request->clo_id);
-        $questions = Question::all()->where('subject_id',$request->subject_id);
+        $questions = Question::join('cloquestions','questions.id','=','cloquestions.question_id')
+                                ->where('questions.subject_id',$request->subject_id)
+                                ->where('cloquestions.clo_id',$request->clo_id)
+                                ->get('questions.*','cloquestions.*');
                     
         $array = array();
         foreach($questions as $question){
@@ -196,17 +197,62 @@ class QuestionController extends Controller
 
     public function editQuestion(Request $request)
     {
-        $new_subject = $request->validate([
-            'id'            => 'exists:users,id',
-            'subject_name'  => 'required|string|exists:subjects,subject_name',
+        $question = Question::findOrFail($request->question_id); 
+        $subject = Subject::findOrFail($question->subject_id);
+        $question['subject'] = $subject->subject_name;
+        
+        $clos = Cloquestion::all()->where('question_id',$question->id);
+        $clo_array = array();
+        foreach($clos as $clo){
+            $clo = Clo::findOrFail($clo->clo_id);
+            array_push($clo_array,$clo->clo_name);
+        }
+        $question['cols'] = $clo_array;
+
+
+        if ($question->answer_type == 0) {
+            $answer = Textanswer::get()->where('question_id',$question->id);
+        }else{
+            $answer = Mcqanswer::all()->where('question_id',$question->id) ;
+        }
+        $question['answer'] = $answer;
+        
+        $new_question = $request->validate([
+            'body'        => 'required|string|unique:questions,body',
+            'subject_id'  => 'required|exists:subjects,id',
+            'level'       => 'required|' . Rule::in([0,1,2]),
+            'answer_type' => 'required|' .Rule::in([0,1]),
            
         ]);  
-        
-        $subject = Subject::findOrFail($request->id);
-        $subject->update($new_subject);
+
+        $question->update($new_question);
         return response()->json(
-            ['message'=>'subject updated']
+            ['message'=>'question updated']
         ,200);
+    }
+
+    public function editQuestionClo(Request $request)
+    {
+        $questionClo = Cloquestion::find($request->question_id);
+        $questionClo->clo_id->update($request->clo_id);
+        return response()->json(
+            ['message'=>'question clo updated']
+        ,200);
+    }
+
+    public function editQuestionAnswer(Request $request)
+    {
+        $ques = Question::findOrFail($request->question_id);
+        if ($ques->answer_type == 0) {
+            $answer = Textanswer::find($ques->id);
+            $answer->update($request->all());
+        }else{
+            $answer = Mcqanswer::find($ques->id);
+            $answer->update($request->all());
+        }
+        return response()->json([
+            'message' => "answer updated"
+        ],200);
     }
 
     public function deleteQuestion(Request $request)

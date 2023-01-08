@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Subject;
+use App\Models\Subjectsassign;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -100,6 +102,18 @@ class AuthController extends Controller
     public function profile()
     {
         $user = Auth::user();
+        if ($user->role == 'teacher') {
+            $subs = Subjectsassign::all()->where('teacher_id',$user->id);
+            $subjects_names =array();
+
+            foreach ($subs as $sub ) {
+                $subjects = Subject::get()->where('id',$sub->subject_id);
+                foreach ($subjects as $subject => $subject_name) {
+                    
+                    array_push($subjects_names,$subject_name->subject_name);
+                } 
+            }
+        }
         return response()->json($user);
     }
 

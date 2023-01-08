@@ -48,6 +48,11 @@ Route::middleware('auth:sanctum')->group(function(){
 
 
     });
+    //profile
+    Route::post('/logout', [App\Http\Controllers\AuthController::class,'logout']);
+    Route::get('/profile', [App\Http\Controllers\AuthController::class,'profile']);
+    Route::post('/editProfile', [App\Http\Controllers\AuthController::class,'editProfile']);
+
     //CLOs
     Route::get('getClos',[App\Http\Controllers\CLOController::class,'getClos']);
     Route::post('getClo',[App\Http\Controllers\CLOController::class,'getClo']);
@@ -63,12 +68,13 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::post('getSubQuestions',[App\Http\Controllers\QuestionController::class,'getSubQuestions']);
     Route::post('getCloQuestions',[App\Http\Controllers\QuestionController::class,'getCloQuestions']);
     Route::post('getQuestion',[App\Http\Controllers\QuestionController::class,'getQuestion']);
-    Route::post('getQuestion',[App\Http\Controllers\QuestionController::class,'getQuestion']);
+    Route::post('editQuestion',[App\Http\Controllers\QuestionController::class,'editQuestion']);
+    Route::post('editQuestionClo',[App\Http\Controllers\QuestionController::class,'editQuestionClo']);
+    Route::post('editQuestionAnswer',[App\Http\Controllers\QuestionController::class,'editQuestionAnswer']);
+    Route::post('deleteQuestion',[App\Http\Controllers\QuestionController::class,'deleteQuestion']);
 
 
-    Route::post('/logout', [App\Http\Controllers\AuthController::class,'logout']);
-    Route::get('/profile', [App\Http\Controllers\AuthController::class,'profile']);
-    Route::post('/editProfile', [App\Http\Controllers\AuthController::class,'editProfile']);
+    
     
     
     
