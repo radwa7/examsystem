@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Subject;
 use App\Models\Subjectsassign;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Validation\Rule;
 use Laravel\Sanctum\Sanctum;
 
 class SubjectController extends Controller
@@ -105,18 +107,33 @@ class SubjectController extends Controller
 
     public function assignAll(Request $request)
     {
+        $teachersArray = $request->teachersIds;
+        var_dump($teachersArray);
         $array = array();
-        foreach($request->teachersIds as $teacherId){
+        foreach($teachersArray as $teacherId){
+            
             foreach ($request->subjectsIds as $subjectId ) {
+                $temp = Subjectsassign::get()->where('teacher_id',$teacherId)->where('subject_id',$subjectId);
                 
-                $assigned = Subjectsassign::create([
-                    'teacher_id' => $teacherId,
-                    'subject_id' => $subjectId,
-                    'author_id'  => Auth::user()->id ,
-                ]);
-                
-                array_push($array,$assigned);
+                if(count($temp)==0){
+                    $test = true;
+                }else{
+                    return response()->json(['message'=>' some teacher already assigned']);
+                    
+                }               
             }
+            if ($test = true) {
+                foreach ($request->subjectsIds as $subjectId ) {
+                    $assigned = Subjectsassign::create([
+                        'teacher_id' => $teacherId,
+                        'subject_id' => $subjectId,
+                        'author_id'  => Auth::user()->id ,
+                    ]);
+                    
+                    array_push($array,$assigned);
+                }
+            }
+            
             $teacher = User::find($teacherId);
             $teacher->update(['status' => 'active']);
         }
@@ -129,6 +146,7 @@ class SubjectController extends Controller
             ] ;
             array_push($res,$response);
         }
+
         return response()->json($res);
 
     }

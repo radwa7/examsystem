@@ -102,8 +102,11 @@ class AuthController extends Controller
     public function profile()
     {
         $user = Auth::user();
+        
         if ($user->role == 'teacher') {
+            
             $subs = Subjectsassign::all()->where('teacher_id',$user->id);
+            
             $subjects_names =array();
 
             foreach ($subs as $sub ) {
@@ -113,6 +116,7 @@ class AuthController extends Controller
                     array_push($subjects_names,$subject_name->subject_name);
                 } 
             }
+            $user['subjects'] =$subjects_names;
         }
         return response()->json($user);
     }
