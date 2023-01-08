@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('mcqanswers', function (Blueprint $table) {
             $table->id();
             $table->integer('question_id');
-            $table->integer('body');
+            $table->text('body');
             $table->integer('status');
             $table->timestamps();
         });

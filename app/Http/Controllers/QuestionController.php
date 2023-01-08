@@ -41,7 +41,7 @@ class QuestionController extends Controller
             'answer_type' => $question['answer_type'],
         ]);
 
-        $question['subject'] = $subject;
+        $question['subject'] = $subject->subject_name;
 
         foreach ($request->clos as $clo ) {
             $clo_array = array();
@@ -89,10 +89,16 @@ class QuestionController extends Controller
     {
         $question = Question::findOrFail($request->question_id); 
         $subject = Subject::findOrFail($question->subject_id);
-        $question['subject'] = $subject;
+        $question['subject'] = $subject->subject_name;
         
         $clos = Cloquestion::all()->where('question_id',$question->id);
-        $question['cols'] = $clos;
+        $clo_array = array();
+        foreach($clos as $clo){
+            $clo = Clo::findOrFail($clo->clo_id);
+            array_push($clo_array,$clo->clo_name);
+        }
+        $question['cols'] = $clo_array;
+
 
         if ($question->answer_type == 0) {
             $answer = Textanswer::get()->where('question_id',$question->id);
@@ -109,10 +115,15 @@ class QuestionController extends Controller
         $array = array();
         foreach($questions as $question){
             $subject = Subject::findOrFail($question->subject_id);
-            $question['subject'] = $subject;
+            $question['subject'] = $subject->subject_name;
             
             $clos = Cloquestion::all()->where('question_id',$question->id);
-            $question['cols'] = $clos;
+            $clo_array = array();
+            foreach($clos as $clo){
+                $clo = Clo::findOrFail($clo->clo_id);
+                array_push($clo_array,$clo->clo_name);
+            }
+            $question['cols'] = $clo_array;
 
             if ($question->answer_type == 0) {
                 $answer = Textanswer::get()->where('question_id',$question->id);
@@ -131,10 +142,15 @@ class QuestionController extends Controller
         $array = array();
         foreach($questions as $question){
             $subject = Subject::findOrFail($question->subject_id);
-            $question['subject'] = $subject;
+            $question['subject'] = $subject->subject_name;
             
             $clos = Cloquestion::all()->where('question_id',$question->id);
-            $question['cols'] = $clos;
+            $clo_array = array();
+            foreach($clos as $clo){
+                $clo = Clo::findOrFail($clo->clo_id);
+                array_push($clo_array,$clo->clo_name);
+            }
+            $question['cols'] = $clo_array;
 
             if ($question->answer_type == 0) {
                 $answer = Textanswer::get()->where('question_id',$question->id);
@@ -149,17 +165,22 @@ class QuestionController extends Controller
 
     public function getCloQuestions(Request $request)
     {
-        $clo = Clo::findOfFail($request->clo_id);
-        $questions = Question::all()
-                    ->where('subject_id',$request->subject_id);
+        $clo = Clo::findOrFail($request->clo_id);
+        $questions = Question::all()->where('subject_id',$request->subject_id);
                     
         $array = array();
         foreach($questions as $question){
             $subject = Subject::findOrFail($question->subject_id);
-            $question['subject'] = $subject;
+            $question['subject'] = $subject->subject_name;
             
             $clos = Cloquestion::all()->where('question_id',$question->id);
-            $question['cols'] = $clos;
+            $clo_array = array();
+            foreach($clos as $clo){
+                $clo = Clo::findOrFail($clo->clo_id);
+                array_push($clo_array,$clo->clo_name);
+            }
+            $question['cols'] = $clo_array;
+
 
             if ($question->answer_type == 0) {
                 $answer = Textanswer::get()->where('question_id',$question->id);
