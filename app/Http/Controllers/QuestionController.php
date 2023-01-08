@@ -248,7 +248,9 @@ class QuestionController extends Controller
             $answer->update($request->all());
         }else{
             $answer = Mcqanswer::find($ques->id);
-            $answer->update($request->all());
+            foreach($answer as $mcq){
+                $mcq->update($request->all());
+            }
         }
         return response()->json([
             'message' => "answer updated"
