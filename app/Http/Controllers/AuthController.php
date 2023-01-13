@@ -113,7 +113,7 @@ class AuthController extends Controller
                 $subjects = Subject::get()->where('id',$sub->subject_id);
                 foreach ($subjects as $subject => $subject_name) {
                     
-                    array_push($subjects_names,$subject_name->subject_name);
+                    array_push($subjects_names,$subject_name);
                 } 
             }
             $user['subjects'] =$subjects_names;

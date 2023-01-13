@@ -32,7 +32,7 @@ class TeacherController extends Controller
             // dd($subjects);
             foreach ($subjects as $subject => $subject_name) {
                 
-                array_push($subjects_names,$subject_name->subject_name);
+                array_push($subjects_names,$subject_name);
             }
             
         }
