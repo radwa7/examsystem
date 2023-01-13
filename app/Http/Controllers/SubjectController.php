@@ -57,7 +57,7 @@ class SubjectController extends Controller
     public function editSubject(Request $request)
     {
         $new_subject = $request->validate([
-            'id'            => 'exists:users,id',
+            'id'            => 'exists:subjects,id',
             'subject_name'  => 'required|string|',
            
         ]);  
