@@ -58,7 +58,7 @@ class SubjectController extends Controller
     {
         $new_subject = $request->validate([
             'id'            => 'exists:users,id',
-            'subject_name'  => 'required|string|exists:subjects,subject_name',
+            'subject_name'  => 'required|string|',
            
         ]);  
         

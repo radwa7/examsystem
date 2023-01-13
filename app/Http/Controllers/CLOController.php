@@ -6,6 +6,7 @@ use App\Models\Clo;
 use App\Models\Subject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use Mockery\Matcher\Subset;
 
 class CLOController extends Controller
@@ -16,7 +17,7 @@ class CLOController extends Controller
         
         $data = $request->validate([
             'subject_id'  => 'required|exists:subjects,id',
-            'clo_names'    => 'required',
+            'clo_names'    => 'required'
         ]);
         foreach($request->clo_names as $clo_name){
             $subs = array();
