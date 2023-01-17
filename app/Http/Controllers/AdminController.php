@@ -9,7 +9,7 @@ class AdminController extends Controller
 {
     public function getAdmins()
     {
-        $admins = User::all()->where('role','admin');
+        $admins = User::where('role','admin')->orWhere('role','super admin')->get();
         $array = array();
         foreach($admins as $admin){
             array_push($array,$admin);

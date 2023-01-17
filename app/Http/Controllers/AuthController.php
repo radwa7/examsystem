@@ -142,10 +142,11 @@ class AuthController extends Controller
     {
         $user = User::where('email',$request->email);
         var_dump(Auth::user()->role);
-        if (Auth::user()->role == 'admin'||Auth::user()->id == $user->id) {
+        if (Auth::user()->role == 'admin'||Auth::user()->role == 'super admin'||Auth::user()->id == $user->id) {
             $user->update(['password' => Hash::make($request->password)]);
-            if (Auth::user()->role == 'admin') {
-                $user->update(['status' =>'deactivated' ]); 
+            if (Auth::user()->role == 'admin'||Auth::user()->role == 'super admin') {
+                if($user->role != 'super admin'){
+                $user->update(['status' =>'deactivated' ]); }
             }
             return response()->json(['response'=>'password changed'],200);
         }
