@@ -101,8 +101,10 @@ class QuestionController extends Controller
 
         $answer = array();
         if ($question->answer_type == 0) {
-            $answer = Textanswer::get()->where('question_id',$question->id);
-            $answer = $answer->body;
+            $answers = Textanswer::get()->where('question_id',$question->id);
+            foreach($answers as $item){
+                    $answer = $item->body;
+                }
         }else{
             $answers = Mcqanswer::all()->where('question_id',$question->id) ;
             foreach($answers as $mcq){
@@ -133,8 +135,10 @@ class QuestionController extends Controller
             $question['cols'] = $clo_array;
 
             if ($question->answer_type == 0) {
-                $answer = Textanswer::get()->where('question_id',$question->id);
-                $answer = $answer->body;
+                $answers = Textanswer::get()->where('question_id',$question->id);
+                foreach($answers as $item){
+                    $answer = $item->body;
+                }
             }else{
                 $answers = Mcqanswer::all()->where('question_id',$question->id) ;
                 foreach($answers as $mcq){
@@ -169,7 +173,6 @@ class QuestionController extends Controller
             if ($question->answer_type == 0) {
                 $answers = Textanswer::get()->where('question_id',$question->id);
                 foreach($answers as $item){
-
                     $answer = $item->body;
                 }
             }else{
@@ -205,8 +208,10 @@ class QuestionController extends Controller
             $question['cols'] = $clo_array;
 
             if ($question->answer_type == 0) {
-                $answer = Textanswer::get()->where('question_id',$question->id);
-                $answer = $answer->body;
+                $answers = Textanswer::get()->where('question_id',$question->id);
+                foreach($answers as $item){
+                    $answer = $item->body;
+                }
             }else{
                 $answers = Mcqanswer::all()->where('question_id',$question->id) ;
                 foreach($answers as $mcq){
@@ -244,8 +249,10 @@ class QuestionController extends Controller
 
 
             if ($question->answer_type == 0) {
-                $answer = Textanswer::get()->where('question_id',$question->id);
-                $answer = $answer->body;
+                $answers = Textanswer::get()->where('question_id',$question->id);
+                foreach($answers as $item){
+                    $answer = $item->body;
+                }
             }else{
                 $answers = Mcqanswer::all()->where('question_id',$question->id) ;
                 foreach($answers as $mcq){
