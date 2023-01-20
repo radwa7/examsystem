@@ -168,7 +168,7 @@ class QuestionController extends Controller
 
             if ($question->answer_type == 0) {
                 $answer = Textanswer::get()->where('question_id',$question->id);
-                $answer = $answer->body;
+                // $answer = $answer->body;
             }else{
                 $answers = Mcqanswer::all()->where('question_id',$question->id) ;
                 foreach($answers as $mcq){
