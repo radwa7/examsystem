@@ -86,6 +86,7 @@ class QuestionController extends Controller
 
     public function getQuestion(Request $request)
     {
+
         $question = Question::findOrFail($request->question_id); 
         $subject = Subject::findOrFail($question->subject_id);
         $question['subject'] = $subject->subject_name;
@@ -98,11 +99,17 @@ class QuestionController extends Controller
         }
         $question['cols'] = $clo_array;
 
-
+        $answer = array();
         if ($question->answer_type == 0) {
             $answer = Textanswer::get()->where('question_id',$question->id);
+            $answer = $answer->body;
         }else{
-            $answer = Mcqanswer::all()->where('question_id',$question->id) ;
+            $answers = Mcqanswer::all()->where('question_id',$question->id) ;
+            foreach($answers as $mcq){
+                $temp['body'] = $mcq->body; 
+                $temp['status'] = $mcq->status;
+                array_push($answer,$temp); 
+            }
         }
         $question['answer'] = $answer;
         return response()->json(['question'=> $question],200);
@@ -113,6 +120,7 @@ class QuestionController extends Controller
         $questions = Question::all();
         $array = array();
         foreach($questions as $question){
+            $answer = array();
             $subject = Subject::findOrFail($question->subject_id);
             $question['subject'] = $subject->subject_name;
             
@@ -126,8 +134,14 @@ class QuestionController extends Controller
 
             if ($question->answer_type == 0) {
                 $answer = Textanswer::get()->where('question_id',$question->id);
+                $answer = $answer->body;
             }else{
-                $answer = Mcqanswer::all()->where('question_id',$question->id) ;
+                $answers = Mcqanswer::all()->where('question_id',$question->id) ;
+                foreach($answers as $mcq){
+                    $temp['body'] = $mcq->body; 
+                    $temp['status'] = $mcq->status;
+                    array_push($answer,$temp); 
+                }
             }
             $question['answer'] = $answer;
             array_push($array,$question);
@@ -140,6 +154,7 @@ class QuestionController extends Controller
         $questions = Question::all()->where('author_id',$request->author_id);
         $array = array();
         foreach($questions as $question){
+            $answer = array();
             $subject = Subject::findOrFail($question->subject_id);
             $question['subject'] = $subject->subject_name;
             
@@ -153,8 +168,14 @@ class QuestionController extends Controller
 
             if ($question->answer_type == 0) {
                 $answer = Textanswer::get()->where('question_id',$question->id);
+                $answer = $answer->body;
             }else{
-                $answer = Mcqanswer::all()->where('question_id',$question->id) ;
+                $answers = Mcqanswer::all()->where('question_id',$question->id) ;
+                foreach($answers as $mcq){
+                    $temp['body'] = $mcq->body; 
+                    $temp['status'] = $mcq->status;
+                    array_push($answer,$temp); 
+                }
             }
             $question['answer'] = $answer;
             array_push($array,$question);
@@ -168,6 +189,7 @@ class QuestionController extends Controller
         $questions = Question::all()->where('subject_id',$request->subject_id);
         $array = array();
         foreach($questions as $question){
+            $answer = array();
             $subject = Subject::findOrFail($question->subject_id);
             $question['subject'] = $subject->subject_name;
             
@@ -181,8 +203,14 @@ class QuestionController extends Controller
 
             if ($question->answer_type == 0) {
                 $answer = Textanswer::get()->where('question_id',$question->id);
+                $answer = $answer->body;
             }else{
-                $answer = Mcqanswer::all()->where('question_id',$question->id) ;
+                $answers = Mcqanswer::all()->where('question_id',$question->id) ;
+                foreach($answers as $mcq){
+                    $temp['body'] = $mcq->body; 
+                    $temp['status'] = $mcq->status;
+                    array_push($answer,$temp); 
+                }
             }
             $question['answer'] = $answer;
             array_push($array,$question);
@@ -199,6 +227,7 @@ class QuestionController extends Controller
                     
         $array = array();
         foreach($questions as $question){
+            $answer = array();
             $subject = Subject::findOrFail($question->subject_id);
             $question['subject'] = $subject->subject_name;
             
@@ -213,8 +242,14 @@ class QuestionController extends Controller
 
             if ($question->answer_type == 0) {
                 $answer = Textanswer::get()->where('question_id',$question->id);
+                $answer = $answer->body;
             }else{
-                $answer = Mcqanswer::all()->where('question_id',$question->id) ;
+                $answers = Mcqanswer::all()->where('question_id',$question->id) ;
+                foreach($answers as $mcq){
+                    $temp['body'] = $mcq->body; 
+                    $temp['status'] = $mcq->status;
+                    array_push($answer,$temp); 
+                }
             }
             $question['answer'] = $answer;
             array_push($array,$question);
