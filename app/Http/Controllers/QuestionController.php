@@ -254,12 +254,14 @@ class QuestionController extends Controller
         ]);  
 
         $question->update($new_question);
+        self::editQuestionAnswer($request);
+        self::editQuestionClo($request);
         return response()->json(
             ['message'=>'question updated']
         ,200);
     }
 
-    public function editQuestionClo(Request $request)
+    public function editQuestionClo($request)
     {
         $questionClo = Cloquestion::find($request->question_id);
         $questionClo->clo_id->update($request->clo_id);
@@ -268,7 +270,7 @@ class QuestionController extends Controller
         ,200);
     }
 
-    public function editQuestionAnswer(Request $request)
+    public function editQuestionAnswer($request)
     {
         $ques = Question::findOrFail($request->question_id);
         if ($ques->answer_type == 0) {
