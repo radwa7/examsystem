@@ -135,6 +135,34 @@ class QuestionController extends Controller
         return response()->json(['questions'=> $array],200);
     }
 
+    public function getAuthorQuestion(Request $request)
+    {
+        $questions = Question::all()->where('author_id',$request->author_id);
+        $array = array();
+        foreach($questions as $question){
+            $subject = Subject::findOrFail($question->subject_id);
+            $question['subject'] = $subject->subject_name;
+            
+            $clos = Cloquestion::all()->where('question_id',$question->id);
+            $clo_array = array();
+            foreach($clos as $clo){
+                $clo = Clo::findOrFail($clo->clo_id);
+                array_push($clo_array,$clo->clo_name);
+            }
+            $question['cols'] = $clo_array;
+
+            if ($question->answer_type == 0) {
+                $answer = Textanswer::get()->where('question_id',$question->id);
+            }else{
+                $answer = Mcqanswer::all()->where('question_id',$question->id) ;
+            }
+            $question['answer'] = $answer;
+            array_push($array,$question);
+        }
+        return response()->json(['questions'=> $array],200);
+
+    }
+
     public function getSubQuestions(Request $request)
     {
         $questions = Question::all()->where('subject_id',$request->subject_id);
