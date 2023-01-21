@@ -69,6 +69,7 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::post('getCloQuestions',[App\Http\Controllers\QuestionController::class,'getCloQuestions']);
     Route::post('getQuestion',[App\Http\Controllers\QuestionController::class,'getQuestion']);
     Route::post('getAuthorQuestion',[App\Http\Controllers\QuestionController::class,'getAuthorQuestion']);
+    Route::post('getAuthorSubQuestion',[App\Http\Controllers\QuestionController::class,'getAuthorSubQuestion']);
     Route::post('editQuestion',[App\Http\Controllers\QuestionController::class,'editQuestion']);
     Route::post('editQuestionClo',[App\Http\Controllers\QuestionController::class,'editQuestionClo']);
     Route::post('editQuestionAnswer',[App\Http\Controllers\QuestionController::class,'editQuestionAnswer']);

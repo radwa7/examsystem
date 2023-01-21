@@ -190,6 +190,43 @@ class QuestionController extends Controller
 
     }
 
+    public function getAuthorSubQuestion(Request $request)
+    {
+        $questions = Question::where('author_id',$request->author_id)->where('subject_id',$request->subject_id)->get();
+        $array = array();
+        foreach($questions as $question){
+            $answer = array();
+            $subject = Subject::findOrFail($question->subject_id);
+            $question['subject'] = $subject->subject_name;
+            
+            $clos = Cloquestion::all()->where('question_id',$question->id);
+            $clo_array = array();
+            foreach($clos as $clo){
+                $clo = Clo::findOrFail($clo->clo_id);
+                array_push($clo_array,$clo->clo_name);
+            }
+            $question['cols'] = $clo_array;
+
+            if ($question->answer_type == 0) {
+                $answers = Textanswer::get()->where('question_id',$question->id);
+                foreach($answers as $item){
+                    $answer = $item->body;
+                }
+            }else{
+                $answers = Mcqanswer::all()->where('question_id',$question->id) ;
+                foreach($answers as $mcq){
+                    $temp['body'] = $mcq->body; 
+                    $temp['status'] = $mcq->status;
+                    array_push($answer,$temp); 
+                }
+            }
+            $question['answer'] = $answer;
+            array_push($array,$question);
+        }
+        return response()->json(['questions'=> $array],200);
+
+    }
+
     public function getSubQuestions(Request $request)
     {
         $questions = Question::all()->where('subject_id',$request->subject_id);
