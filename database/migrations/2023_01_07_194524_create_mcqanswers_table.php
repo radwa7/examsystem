@@ -15,10 +15,11 @@ return new class extends Migration
     {
         Schema::create('mcqanswers', function (Blueprint $table) {
             $table->id();
-            $table->integer('question_id');
+            $table->unsignedBigInteger('question_id');
             $table->text('body');
             $table->integer('status');
             $table->timestamps();
+            $table->foreign('question_id')->references('id')->on('questions')->onDelete('cascade');
         });
     }
 

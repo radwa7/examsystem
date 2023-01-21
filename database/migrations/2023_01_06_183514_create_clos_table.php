@@ -16,8 +16,9 @@ return new class extends Migration
         Schema::create('clos', function (Blueprint $table) {
             $table->id();
             $table->string('clo_name');
-            $table->integer('subject_id');
+            $table->unsignedBigInteger('subject_id');
             $table->integer('author_id');
+            $table->foreign('subject_id')->references('id')->on('subjects')->onDelete('cascade');
             $table->timestamps();
         });
     }

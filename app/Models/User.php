@@ -44,4 +44,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function subjectsassign() :HasMany
+    {
+        return $this->hasMany(Subjectsassign::class,'teacher_id');
+    }
 }

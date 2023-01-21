@@ -15,9 +15,11 @@ return new class extends Migration
     {
         Schema::create('cloquestions', function (Blueprint $table) {
             $table->id();
-            $table->integer('clo_id');
-            $table->integer('question_id');
+            $table->unsignedBigInteger('clo_id');
+            $table->unsignedBigInteger('question_id');
             $table->timestamps();
+            $table->foreign('clo_id')->references('id')->on('clos')->onDelete('cascade');
+            $table->foreign('question_id')->references('id')->on('questions')->onDelete('cascade');
         });
     }
 

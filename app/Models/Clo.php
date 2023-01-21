@@ -14,4 +14,9 @@ class Clo extends Model
         'subject_id',
         'author_id',
     ];
+
+    public function cloquestion() :HasMany
+    {
+        return $this->hasMany(Cloquestion::class,'clo_id');
+    }
 }

@@ -16,11 +16,12 @@ return new class extends Migration
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
             $table->text('body');
-            $table->integer('subject_id');
+            $table->unsignedBigInteger('subject_id');
             $table->integer('level');
             $table->integer('author_id');
             $table->integer('answer_type');
             $table->timestamps();
+            $table->foreign('subject_id')->references('id')->on('subjects')->onDelete('cascade');
         });
     }
 

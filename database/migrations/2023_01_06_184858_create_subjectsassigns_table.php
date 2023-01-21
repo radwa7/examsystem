@@ -15,10 +15,12 @@ return new class extends Migration
     {
         Schema::create('subjectsassigns', function (Blueprint $table) {
             $table->id();
-            $table->string('subject_id');
-            $table->string('teacher_id');
+            $table->unsignedBigInteger('subject_id');
+            $table->unsignedBigInteger('teacher_id');
             $table->string('author_id');
             $table->timestamps();
+            $table->foreign('subject_id')->references('id')->on('subjects')->onDelete('cascade');
+            $table->foreign('teacher_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

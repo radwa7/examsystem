@@ -14,4 +14,13 @@ class Subject extends Model
         'author_id'
     ];
 
+    public function clo() :HasMany
+    {
+        return $this->hasMany(Clo::class,'subject_id');
+    }
+    public function subjectsassign() :HasMany
+    {
+        return $this->hasMany(Subjectsassign::class,'subject_id');
+    }
+
 }
