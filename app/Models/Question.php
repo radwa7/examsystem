@@ -29,4 +29,8 @@ class Question extends Model
     {
         return $this->hasMany(Mcqanswer::class,'question_id');
     }
+    public function exam_question() :HasMany
+    {
+        return $this->hasMany(ExamQuestion::class,'question_id');
+    }
 }

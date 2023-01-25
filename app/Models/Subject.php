@@ -23,4 +23,8 @@ class Subject extends Model
         return $this->hasMany(Subjectsassign::class,'subject_id');
     }
 
+    public function Exam() :HasMany
+    {
+        return $this->hasMany(Exam::class,'subject_id');
+    }
 }
