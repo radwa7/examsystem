@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [App\Http\Controllers\AuthController::class,'login']);
 Route::post('/checkEmail', [App\Http\Controllers\AuthController::class,'checkEmail']);
-Route::post('/createExam', [App\Http\Controllers\ExamController::class,'createExam']);
+
 
 
 
@@ -77,7 +77,8 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::post('deleteQuestion',[App\Http\Controllers\QuestionController::class,'deleteQuestion']);
 
 
-    
+    //Exam
+    Route::post('/createExam', [App\Http\Controllers\ExamController::class,'createExam']);
     
     
     
