@@ -37,7 +37,7 @@ class ExamController extends Controller
             'code'          =>  $data['code'],
             'date'          =>  $data['date'],
             'year'          =>  $data['year'],
-            'status'        =>  $data['status'],
+            'status'        =>  0,
             'total_score'   =>  $data['total_score'],
             'duration'      =>  $data['duration'],
         ]);
