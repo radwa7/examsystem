@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('duration');
             $table->date('date');
             $table->integer('year');
-            $table->integer('total_score');
+            $table->integer('total_score')->nullable();
             $table->integer('author_id');
             $table->integer('status');
             $table->timestamps();

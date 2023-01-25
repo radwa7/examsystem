@@ -17,13 +17,10 @@ class ExamController extends Controller
             'title'         =>  'required',
             'subject_id'    =>  'required|exists:subjects,id',
             'genration_type'=>  'required|in:1,2',
-            'author_id'     =>  'required',
             'semester'      =>  'required',
             'code'          =>  'required',
             'date'          =>  'required',
             'year'          =>  'required',
-            'status'        =>  'required|',
-            'total_score'   =>  'required|',
             'duration'      =>  'required',
             'clos'          =>  'required',
         ]);
@@ -38,7 +35,6 @@ class ExamController extends Controller
             'date'          =>  $data['date'],
             'year'          =>  $data['year'],
             'status'        =>  0,
-            'total_score'   =>  $data['total_score'],
             'duration'      =>  $data['duration'],
         ]);
         
