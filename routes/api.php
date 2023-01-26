@@ -79,6 +79,7 @@ Route::middleware('auth:sanctum')->group(function(){
 
     //Exam
     Route::post('/createExam', [App\Http\Controllers\ExamController::class,'createExam']);
+    Route::post('/deleteExam', [App\Http\Controllers\ExamController::class,'deleteExam']);
     
     
     
