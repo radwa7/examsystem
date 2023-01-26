@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Exam;
 use App\Models\ExamQuestion;
+use App\Models\Question;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -41,19 +42,30 @@ class ExamController extends Controller
         $questions = array();
         if($request->genration_type == 1){
             foreach ($request->clos as $clo) {
-                
-                    
-                    $key = ExamQuestion::create([
+                $key = ExamQuestion::create([
                         'exam_id'     => $exam['id'],
                         'question_id' => $clo['question_id'],
                         'score'       => null,
                     ]);
-                    array_push($questions,$key);
-                
+                    array_push($questions,$key);          
             }
             $exam['questions']=$questions;
         }else{
-
+            foreach ($request->clos as $clo) {
+                $questions = Question::join('cloquestions','questions.id','=','cloquestions.question_id')
+                                ->where('questions.subject_id',$data['subject_id'])
+                                ->where('cloquestions.clo_id',$clo['clo_id'])
+                                ->get('questions.*','cloquestions.*')->random(floor($request->no_questions*$clo['precentage']));           
+            }
+            foreach ($questions as $question ) {
+                $key = ExamQuestion::create([
+                    'exam_id'     => $exam['id'],
+                    'question_id' => $question['question_id'],
+                    'score'       => null,
+                ]);
+                array_push($questions,$key);  
+            }
+            $exam['questions']=$questions;
         }
        
         return $exam;
