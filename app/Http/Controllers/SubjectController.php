@@ -36,6 +36,21 @@ class SubjectController extends Controller
         ],201);
     }
 
+    public function editSubject(Request $request)
+    {
+        $new_subject = $request->validate([
+            'id'            => 'exists:subjects,id',
+            'subject_name'  => 'required|string|',
+           
+        ]);  
+        
+        $subject = Subject::findOrFail($request->id);
+        $subject->update($new_subject);
+        return response()->json(
+            ['message'=>'subject updated']
+        ,200);
+    }
+
     public function getSubjects()
     {
         $subjects = Subject::all();
@@ -52,21 +67,6 @@ class SubjectController extends Controller
         return response()->json([
             'subject' => $subject
         ],200);
-    }
-
-    public function editSubject(Request $request)
-    {
-        $new_subject = $request->validate([
-            'id'            => 'exists:subjects,id',
-            'subject_name'  => 'required|string|',
-           
-        ]);  
-        
-        $subject = Subject::findOrFail($request->id);
-        $subject->update($new_subject);
-        return response()->json(
-            ['message'=>'subject updated']
-        ,200);
     }
 
     public function deleteSubject(Request $request)

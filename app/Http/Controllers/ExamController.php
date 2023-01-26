@@ -72,6 +72,58 @@ class ExamController extends Controller
         return response()->json($exam);
     }
 
+    public function editExam(Request $request)
+    {
+        $new_exam = $request->validate([
+            'id'            =>  'required|exists:exams,id',
+            'title'         =>  'required',
+            'subject_id'    =>  'required|exists:subjects,id',
+            'genration_type'=>  'required|in:1,2',
+            'semester'      =>  'required',
+            'code'          =>  'required',
+            'date'          =>  'required',
+            'year'          =>  'required',
+            'duration'      =>  'required',
+            'clos'          =>  'required',
+        ]);
+
+        $exam = Exam::findOrFail($request->id);
+        $exam->update($new_exam);
+        $exam_questions = ExamQuestion::where('exam_id',$request->id)->get();
+        $exam_questions->delete();
+        $questions_array = array();
+        if($request->genration_type == 1){
+            foreach ($request->clos as $clo) {
+                $key = ExamQuestion::create([
+                        'exam_id'     => $exam['id'],
+                        'question_id' => $clo['question_id'],
+                        'score'       => null,
+                    ]);
+                    array_push($questions_array,$key);          
+            }
+            $exam['questions']=$questions_array;
+        }else{
+            foreach ($request->clos as $clo) {
+                $questions = Question::join('cloquestions','questions.id','=','cloquestions.question_id')
+                                ->where('questions.subject_id',$request->subject_id)
+                                ->where('cloquestions.clo_id',$clo['clo_id'])
+                                ->get('questions.*','cloquestions.*')->random(floor($request->no_questions*$clo['precentage']));           
+                foreach ($questions as $question ) {
+                    $key = ExamQuestion::create([
+                        'exam_id'     => $exam['id'],
+                        'question_id' => $question['id'],
+                        'score'       => null,
+                    ]);
+                    array_push($questions_array,$key);  
+                }
+            }
+            
+            $exam['questions']=$questions_array;
+        }
+       
+        return response()->json($exam);
+    }
+
     public function deleteExam(Request $request)
     {
         $exam = Exam::findOrFail($request->exam_id);
