@@ -60,7 +60,7 @@ class ExamController extends Controller
             foreach ($questions as $question ) {
                 $key = ExamQuestion::create([
                     'exam_id'     => $exam['id'],
-                    'question_id' => $question['question_id'],
+                    'question_id' => $question['id'],
                     'score'       => null,
                 ]);
                 array_push($questions,$key);  
@@ -68,7 +68,7 @@ class ExamController extends Controller
             $exam['questions']=$questions;
         }
        
-        return $exam;
+        return response()->json($exam);
     }
 
     public function deleteExam(Request $request)
