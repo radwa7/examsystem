@@ -15,30 +15,30 @@ class ExamController extends Controller
 
     public function createExam(Request $request)
     {
-        
-        // $data = $request->validate([
-        //     'title'         =>  'required',
-        //     'subject_id'    =>  'required|exists:subjects,id',
-        //     'genration_type'=>  'required|in:1,2',
-        //     'semester'      =>  'required',
-        //     'code'          =>  'required',
-        //     'date'          =>  'required',
-        //     'year'          =>  'required',
-        //     'duration'      =>  'required',
-        //     'questions'     =>  'required',
-        // ]);
+        var_dump($request);
+        $data = $request->validate([
+            'title'         =>  'required',
+            'subject_id'    =>  'required|exists:subjects,id',
+            'genration_type'=>  'required|in:1,2',
+            'semester'      =>  'required',
+            'code'          =>  'required',
+            'date'          =>  'required',
+            'year'          =>  'required',
+            'duration'      =>  'required',
+            'questions'     =>  'required',
+        ]);
         
         $exam = Exam::create([
-            'title'         =>  $request->title,
-            'subject_id'    =>  $request->subject_id,
-            'genration_type'=>  $request->genration_type,
+            'title'         =>  $data['title'],
+            'subject_id'    =>  $data['subject_id'],
+            'genration_type'=>  $data['genration_type'],
             'author_id'     =>  Auth::user()->id,
-            'semester'      =>  $request->semester,
-            'code'          =>  $request->code,
-            'date'          =>  $request->date,
-            'year'          =>  $request->year,
+            'semester'      =>  $data['semester'],
+            'code'          =>  $data['code'],
+            'date'          =>  $data['date'],
+            'year'          =>  $data['year'],
             'status'        =>  0,
-            'duration'      =>  $request->duration,
+            'duration'      =>  $data['duration'],
         ]);
         
         $questions_array = array();
