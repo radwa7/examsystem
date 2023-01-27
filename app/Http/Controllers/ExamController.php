@@ -15,7 +15,7 @@ class ExamController extends Controller
 
     public function createExam(Request $request)
     {
-        var_dump($request);
+        // var_dump($request);
         $data = $request->validate([
             'title'         =>  'required',
             'subject_id'    =>  'required|exists:subjects,id',
@@ -32,7 +32,7 @@ class ExamController extends Controller
             'title'         =>  $data['title'],
             'subject_id'    =>  $data['subject_id'],
             'genration_type'=>  $data['genration_type'],
-            'author_id'     =>  Auth::user()->id,
+            'author_id'     =>  2,
             'semester'      =>  $data['semester'],
             'code'          =>  $data['code'],
             'date'          =>  $data['date'],
@@ -46,8 +46,8 @@ class ExamController extends Controller
             foreach ($request->questions as $question) {
                 $key = ExamQuestion::create([
                         'exam_id'     => $exam['id'],
-                        'question_id' => $question->id,
-                        'score'       => $question->mark,
+                        'question_id' => $question['id'],
+                        'score'       => $question['mark'],
                     ]);
                 array_push($questions_array,$key);          
             }
