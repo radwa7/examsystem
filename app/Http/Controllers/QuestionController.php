@@ -95,7 +95,7 @@ class QuestionController extends Controller
         $clo_array = array();
         foreach($clos as $clo){
             $clo = Clo::findOrFail($clo->clo_id);
-            array_push($clo_array,$clo->clo_name);
+            array_push($clo_array,$clo->id);
         }
         $question['cols'] = $clo_array;
 
