@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Exam;
 use App\Models\ExamQuestion;
+use App\Models\Mcqanswer;
 use App\Models\Question;
+use App\Models\Textanswer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -143,6 +145,21 @@ class ExamController extends Controller
         foreach ($exam_questions as $question) {
             $question_body = Question::findOrFail($question->question_id);
             array_push($questions,$question_body);
+            $answer = array();
+        if ($question_body->answer_type == 0) {
+            $answers = Textanswer::get()->where('question_id',$question_body->id);
+            foreach($answers as $item){
+                    $answer = $item->body;
+                }
+        }else{
+            $answers = Mcqanswer::all()->where('question_id',$question_body->id) ;
+            foreach($answers as $mcq){
+                $temp['body'] = $mcq->body; 
+                $temp['status'] = $mcq->status;
+                array_push($answer,$temp); 
+            }
+        }
+        $question_body['answer'] = $answer;
         }
         $exam['questions'] = $questions;
         return response()->json($exam);
