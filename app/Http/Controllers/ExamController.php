@@ -141,10 +141,25 @@ class ExamController extends Controller
         $exam_questions = ExamQuestion::where('exam_id',$request->exam_id)->get();
         $questions = array();
         foreach ($exam_questions as $question) {
+            var_dump($question);
             $question_body = Question::findOrFail($question);
             array_push($questions,$question_body);
         }
         $exam['questions'] = $questions;
         return response()->json($exam);
     }
+
+    public function getExamByAuthor(Request $request)
+    {
+        $exam = Exam::findOrFail($request->exam_id);
+        $exam_questions = ExamQuestion::where('author_id',$request->exam_id)->get();
+        $questions = array();
+        foreach ($exam_questions as $question) {
+            $question_body = Question::findOrFail($question);
+            array_push($questions,$question_body);
+        }
+        $exam['questions'] = $questions;
+        return response()->json($exam);
+    }
+    
 }
