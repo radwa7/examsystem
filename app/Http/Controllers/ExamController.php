@@ -141,7 +141,7 @@ class ExamController extends Controller
         $exam_questions = ExamQuestion::where('exam_id',$request->exam_id)->get();
         $questions = array();
         foreach ($exam_questions as $question) {
-            $question_body = Question::findOrFail($question->id);
+            $question_body = Question::findOrFail($question->question_id);
             array_push($questions,$question_body);
         }
         $exam['questions'] = $questions;
@@ -150,11 +150,11 @@ class ExamController extends Controller
 
     public function getExamByAuthor(Request $request)
     {
-        $exam = Exam::findOrFail($request->exam_id);
+        $exam = Exam::where('author',$request->author_id)->get();
         $exam_questions = ExamQuestion::where('author_id',$request->exam_id)->get();
         $questions = array();
         foreach ($exam_questions as $question) {
-            $question_body = Question::findOrFail($question->id);
+            $question_body = Question::findOrFail($question->question_id);
             array_push($questions,$question_body);
         }
         $exam['questions'] = $questions;
