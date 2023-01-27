@@ -43,13 +43,13 @@ class ExamController extends Controller
         
         $questions_array = array();
         if($request->genration_type == 1){
-            foreach ($request->clos as $clo) {
+            foreach ($request->questions as $question) {
                 $key = ExamQuestion::create([
                         'exam_id'     => $exam['id'],
-                        'question_id' => $clo['question_id'],
-                        'score'       => null,
+                        'question_id' => $question->id,
+                        'score'       => $question->mark,
                     ]);
-                    array_push($questions_array,$key);          
+                array_push($questions_array,$key);          
             }
             $exam['questions']=$questions_array;
         }else{
