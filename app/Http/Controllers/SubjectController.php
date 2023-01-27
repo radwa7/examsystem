@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Clo;
+use App\Models\Mcqanswer;
 use App\Models\Question;
 use App\Models\Subject;
 use App\Models\Subjectsassign;
+use App\Models\Textanswer;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -82,7 +84,22 @@ class SubjectController extends Controller
                                 ->where('cloquestions.clo_id',$clo->id)
                                 ->get('questions.*','cloquestions.*');
             $questions_array = array();
+            $answer = array();
             foreach ($questions as $question) {
+                if ($question->answer_type == 0) {
+                    $answers = Textanswer::get()->where('question_id',$question->id);
+                    foreach($answers as $item){
+                        $answer = $item->body;
+                    }
+                }else{
+                    $answers = Mcqanswer::all()->where('question_id',$question->id) ;
+                    foreach($answers as $mcq){
+                        $temp['body'] = $mcq->body; 
+                        $temp['status'] = $mcq->status;
+                        array_push($answer,$temp); 
+                    }
+                }
+                $question['answer'] = $answer;
                 array_push($questions_array,$question);
             }
             $clo['questions'] = $questions_array;
