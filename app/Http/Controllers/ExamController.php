@@ -146,20 +146,20 @@ class ExamController extends Controller
             $question_body = Question::findOrFail($question->question_id);
             array_push($questions,$question_body);
             $answer = array();
-        if ($question_body->answer_type == 0) {
-            $answers = Textanswer::get()->where('question_id',$question_body->id);
-            foreach($answers as $item){
-                    $answer = $item->body;
+            if ($question_body->answer_type == 0) {
+                $answers = Textanswer::get()->where('question_id',$question_body->id);
+                foreach($answers as $item){
+                        $answer = $item->body;
+                    }
+            }else{
+                $answers = Mcqanswer::all()->where('question_id',$question_body->id) ;
+                foreach($answers as $mcq){
+                    $temp['body'] = $mcq->body; 
+                    $temp['status'] = $mcq->status;
+                    array_push($answer,$temp); 
                 }
-        }else{
-            $answers = Mcqanswer::all()->where('question_id',$question_body->id) ;
-            foreach($answers as $mcq){
-                $temp['body'] = $mcq->body; 
-                $temp['status'] = $mcq->status;
-                array_push($answer,$temp); 
             }
-        }
-        $question_body['answer'] = $answer;
+            $question_body['answer'] = $answer;
         }
         $exam['questions'] = $questions;
         return response()->json($exam);
@@ -175,6 +175,21 @@ class ExamController extends Controller
             foreach ($exam_questions as $question) {
                 $question_body = Question::findOrFail($question->question_id);
                 array_push($questions,$question_body);
+                $answer = array();
+                if ($question_body->answer_type == 0) {
+                    $answers = Textanswer::get()->where('question_id',$question_body->id);
+                    foreach($answers as $item){
+                            $answer = $item->body;
+                        }
+                }else{
+                    $answers = Mcqanswer::all()->where('question_id',$question_body->id) ;
+                    foreach($answers as $mcq){
+                        $temp['body'] = $mcq->body; 
+                        $temp['status'] = $mcq->status;
+                        array_push($answer,$temp); 
+                    }
+                }
+                $question_body['answer'] = $answer;
             }
             $exam['questions'] = $questions;
             array_push($allExams,$exam);
@@ -192,6 +207,86 @@ class ExamController extends Controller
             foreach ($exam_questions as $question) {
                 $question_body = Question::findOrFail($question->question_id);
                 array_push($questions,$question_body);
+                $answer = array();
+                if ($question_body->answer_type == 0) {
+                    $answers = Textanswer::get()->where('question_id',$question_body->id);
+                    foreach($answers as $item){
+                            $answer = $item->body;
+                        }
+                }else{
+                    $answers = Mcqanswer::all()->where('question_id',$question_body->id) ;
+                    foreach($answers as $mcq){
+                        $temp['body'] = $mcq->body; 
+                        $temp['status'] = $mcq->status;
+                        array_push($answer,$temp); 
+                    }
+                }
+                $question_body['answer'] = $answer;
+            }
+            $exam['questions'] = $questions;
+            array_push($allExams,$exam);
+        }
+        return response()->json($allExams);
+    }
+
+    public function getExamBySub(Request $request)
+    {
+        $exams = Exam::where('subject_id',$request->subject_id)->get();
+        $allExams = array();
+        foreach($exams as $exam){
+            $exam_questions = ExamQuestion::where('exam_id',$exam->id)->get();
+            $questions = array();
+            foreach ($exam_questions as $question) {
+                $question_body = Question::findOrFail($question->question_id);
+                array_push($questions,$question_body);
+                $answer = array();
+                if ($question_body->answer_type == 0) {
+                    $answers = Textanswer::get()->where('question_id',$question_body->id);
+                    foreach($answers as $item){
+                            $answer = $item->body;
+                        }
+                }else{
+                    $answers = Mcqanswer::all()->where('question_id',$question_body->id) ;
+                    foreach($answers as $mcq){
+                        $temp['body'] = $mcq->body; 
+                        $temp['status'] = $mcq->status;
+                        array_push($answer,$temp); 
+                    }
+                }
+                $question_body['answer'] = $answer;
+            }
+            $exam['questions'] = $questions;
+            array_push($allExams,$exam);
+        }
+        return response()->json($allExams);
+
+    }
+
+    public function getExamBySubAuth(Request $request)
+    {
+        $exams = Exam::where('subject_id',$request->author_id)->where('author_id',$request->subject_id)->get();
+        $allExams = array();
+        foreach($exams as $exam){
+            $exam_questions = ExamQuestion::where('exam_id',$exam->id)->get();
+            $questions = array();
+            foreach ($exam_questions as $question) {
+                $question_body = Question::findOrFail($question->question_id);
+                array_push($questions,$question_body);
+                $answer = array();
+                if ($question_body->answer_type == 0) {
+                    $answers = Textanswer::get()->where('question_id',$question_body->id);
+                    foreach($answers as $item){
+                            $answer = $item->body;
+                        }
+                }else{
+                    $answers = Mcqanswer::all()->where('question_id',$question_body->id) ;
+                    foreach($answers as $mcq){
+                        $temp['body'] = $mcq->body; 
+                        $temp['status'] = $mcq->status;
+                        array_push($answer,$temp); 
+                    }
+                }
+                $question_body['answer'] = $answer;
             }
             $exam['questions'] = $questions;
             array_push($allExams,$exam);
