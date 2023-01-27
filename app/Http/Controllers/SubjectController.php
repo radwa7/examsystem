@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Clo;
+use App\Models\Question;
 use App\Models\Subject;
 use App\Models\Subjectsassign;
 use App\Models\User;
@@ -67,6 +69,29 @@ class SubjectController extends Controller
         return response()->json([
             'subject' => $subject
         ],200);
+    }
+
+    public function getSubjectDetails(Request $request)
+    {
+        $subject = Subject::findOrFail($request->subject_id);
+        $clos_array = array();
+        $clos = Clo::all()->where('subject_id',$subject->id);
+        foreach($clos as $clo){
+            $questions = Question::join('cloquestions','questions.id','=','cloquestions.question_id')
+                                ->where('questions.subject_id',$subject->id)
+                                ->where('cloquestions.clo_id',$clo->id)
+                                ->get('questions.*','cloquestions.*');
+            $questions_array = array();
+            foreach ($questions as $question) {
+                array_push($questions_array,$question);
+            }
+            $clo['questions'] = $questions_array;
+            array_push($clos_array,$clo);
+        }
+        $subject['clos']= $clos_array;
+        return response()->json([
+            'subject' => $subject
+        ],200); 
     }
 
     public function deleteSubject(Request $request)
