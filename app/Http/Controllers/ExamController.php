@@ -25,7 +25,7 @@ class ExamController extends Controller
             'date'          =>  'required',
             'year'          =>  'required',
             'duration'      =>  'required',
-            'clos'          =>  'required',
+            'questions'     =>  'required',
         ]);
         
         $exam = Exam::create([
