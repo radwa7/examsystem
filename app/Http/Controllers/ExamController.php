@@ -164,5 +164,22 @@ class ExamController extends Controller
         }
         return response()->json($allExams);
     }
+
+    public function getExamByAuthorSub(Request $request)
+    {
+        $exams = Exam::where('author_id',$request->author_id)->where('subject_id',$request->subject_id)->get();
+        $allExams = array();
+        foreach($exams as $exam){
+            $exam_questions = ExamQuestion::where('exam_id',$exam->id)->get();
+            $questions = array();
+            foreach ($exam_questions as $question) {
+                $question_body = Question::findOrFail($question->question_id);
+                array_push($questions,$question_body);
+            }
+            $exam['questions'] = $questions;
+            array_push($allExams,$exam);
+        }
+        return response()->json($allExams);
+    }
     
 }

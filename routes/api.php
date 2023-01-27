@@ -83,6 +83,7 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::post('/deleteExam', [App\Http\Controllers\ExamController::class,'deleteExam']);
     Route::post('/getExam', [App\Http\Controllers\ExamController::class,'getExam']);
     Route::post('/getExamByAuthor', [App\Http\Controllers\ExamController::class,'getExamByAuthor']);
+    Route::post('/getExamByAuthorSub', [App\Http\Controllers\ExamController::class,'getExamByAuthorSub']);
     
     
     
