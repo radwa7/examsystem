@@ -90,7 +90,9 @@ class ExamController extends Controller
         $exam = Exam::findOrFail($request->id);
         $exam->update($new_exam);
         $exam_questions = ExamQuestion::where('exam_id',$request->id)->get();
-        $exam_questions->delete();
+        foreach ($exam_questions as $exam_question) {
+            $exam_question->delete();
+        }
         $questions_array = array();
         if($request->genration_type == 1){
             foreach ($request->clos as $clo) {
