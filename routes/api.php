@@ -49,8 +49,7 @@ Route::middleware('auth:sanctum')->group(function(){
 
         //Exams
         Route::post('/getExamBySub', [App\Http\Controllers\ExamController::class,'getExamBySub']);
-        Route::post('/getExamBySubAuth', [App\Http\Controllers\ExamController::class,'getExamBySubAuth']);
-
+        
     });
     //profile
     Route::post('/logout', [App\Http\Controllers\AuthController::class,'logout']);

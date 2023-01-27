@@ -262,36 +262,6 @@ class ExamController extends Controller
 
     }
 
-    public function getExamBySubAuth(Request $request)
-    {
-        $exams = Exam::where('subject_id',$request->author_id)->where('author_id',$request->subject_id)->get();
-        $allExams = array();
-        foreach($exams as $exam){
-            $exam_questions = ExamQuestion::where('exam_id',$exam->id)->get();
-            $questions = array();
-            foreach ($exam_questions as $question) {
-                $question_body = Question::findOrFail($question->question_id);
-                array_push($questions,$question_body);
-                $answer = array();
-                if ($question_body->answer_type == 0) {
-                    $answers = Textanswer::get()->where('question_id',$question_body->id);
-                    foreach($answers as $item){
-                            $answer = $item->body;
-                        }
-                }else{
-                    $answers = Mcqanswer::all()->where('question_id',$question_body->id) ;
-                    foreach($answers as $mcq){
-                        $temp['body'] = $mcq->body; 
-                        $temp['status'] = $mcq->status;
-                        array_push($answer,$temp); 
-                    }
-                }
-                $question_body['answer'] = $answer;
-            }
-            $exam['questions'] = $questions;
-            array_push($allExams,$exam);
-        }
-        return response()->json($allExams);
-    }
+   
     
 }
