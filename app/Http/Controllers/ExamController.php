@@ -139,9 +139,9 @@ class ExamController extends Controller
     {
         $exam = Exam::findOrFail($request->exam_id);
         $exam_questions = ExamQuestion::where('exam_id',$request->exam_id)->get();
+        var_dump($exam_questions);
         $questions = array();
         foreach ($exam_questions as $question) {
-            var_dump($question);
             $question_body = Question::findOrFail($question);
             array_push($questions,$question_body);
         }
