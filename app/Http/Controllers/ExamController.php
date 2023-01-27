@@ -150,7 +150,7 @@ class ExamController extends Controller
 
     public function getExamByAuthor(Request $request)
     {
-        $exam = Exam::where('author',$request->author_id)->get();
+        $exam = Exam::where('author_id',$request->author_id)->get();
         $exam_questions = ExamQuestion::where('author_id',$request->exam_id)->get();
         $questions = array();
         foreach ($exam_questions as $question) {
