@@ -31,7 +31,7 @@ class ExamController extends Controller
             'title'         =>  $data['title'],
             'subject_id'    =>  $data['subject_id'],
             'genration_type'=>  $data['genration_type'],
-            'author_id'     =>  2,
+            'author_id'     =>  Auth::user()->id,
             'semester'      =>  $data['semester'],
             'code'          =>  $data['code'],
             'date'          =>  $data['date'],
