@@ -15,7 +15,7 @@ class ExamController extends Controller
 
     public function createExam(Request $request)
     {
-        // var_dump($request);
+        var_dump($request->all());
         // $data = $request->validate([
         //     'title'         =>  'required',
         //     'subject_id'    =>  'required|exists:subjects,id',
@@ -28,7 +28,7 @@ class ExamController extends Controller
         // ]);
         
         $exam = Exam::create([
-            'title'         =>  $request->title,
+            'title'         =>  $request['title'],
             'subject_id'    =>  $request->subject_id,
             'genration_type'=>  $request->genration_type,
             'author_id'     =>  Auth::user()->id,
@@ -136,36 +136,24 @@ class ExamController extends Controller
             $exam_question->delete();
         }
         $questions_array = array();
-        if($request->genration_type == 1){
-            foreach ($request->clos as $clo) {
-                $key = ExamQuestion::create([
-                        'exam_id'     => $exam['id'],
-                        'question_id' => $clo['question_id'],
-                        'score'       => null,
-                    ]);
-                    array_push($questions_array,$key);          
-            }
-            $exam['questions']=$questions_array;
-        }else{
-            foreach ($request->clos as $clo) {
-                $questions = Question::join('cloquestions','questions.id','=','cloquestions.question_id')
-                                ->where('questions.subject_id',$request->subject_id)
-                                ->where('cloquestions.clo_id',$clo['clo_id'])
-                                ->get('questions.*','cloquestions.*')->random(floor($request->no_questions*$clo['precentage']));           
-                foreach ($questions as $question ) {
-                    $key = ExamQuestion::create([
-                        'exam_id'     => $exam['id'],
-                        'question_id' => $question['id'],
-                        'score'       => null,
-                    ]);
-                    array_push($questions_array,$key);  
-                }
-            }
-            
-            $exam['questions']=$questions_array;
+        $total_score = 0;
+        foreach ($request->questions as $question) {
+            $key = ExamQuestion::create([
+                    'exam_id'     => $exam['id'],
+                    'question_id' => $question['id'],
+                    'score'       => $question['mark'],
+                ]);
+            array_push($questions_array,$key);
+            $total_score = $total_score + $question['mark'];          
         }
+        $exam['questions']=$questions_array;
+        
+        $this_exam = Exam::where('id',$exam['id'])->first();
+        $this_exam->update(['total_score'=> $total_score]);
+        $this_exam->update(['status'=> 1]);
+        $this_exam['questions'] = $questions_array;
        
-        return response()->json($exam);
+        return response()->json($this_exam);
     }
 
     public function deleteExam(Request $request)
