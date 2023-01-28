@@ -59,12 +59,17 @@ class ExamController extends Controller
                                 ->where('questions.subject_id',$data['subject_id'])
                                 ->where('cloquestions.clo_id',$clo['clo_id'])
                                 ->get('questions.*','cloquestions.*')->random(floor($request->no_questions*$clo['precentage']));
-                           
+                          
                 foreach ($questions as $question ) {
+                    if($question['answer_type']==0){
+                        $mark = $request->text_mark;
+                    }else{
+                        $mark = $request->mcq_mark;
+                    } 
                     $key = ExamQuestion::create([
                         'exam_id'     => $exam['id'],
                         'question_id' => $question['id'],
-                        'score'       => null,
+                        'score'       => $mark,
                     ]);
                     array_push($questions_array,$key);
                     if($question['answer_type']==0){
@@ -78,11 +83,15 @@ class ExamController extends Controller
                                 ->where('questions.subject_id',$data['subject_id'])
                                 ->where('cloquestions.clo_id',$clo['clo_id'])
                                 ->get('questions.*','cloquestions.*')->random();
-                    
+                    if($another_question['answer_type']==0){
+                        $mark = $request->text_mark;
+                    }else{
+                        $mark = $request->mcq_mark;
+                    } 
                     $temp = ExamQuestion::create([
                         'exam_id'     => $exam['id'],
                         'question_id' => $another_question['id'],
-                        'score'       => null,
+                        'score'       => $mark,
                     ]);
                     array_push($questions_array,$temp);
                     if($another_question['answer_type']==0){
