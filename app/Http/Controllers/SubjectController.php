@@ -84,8 +84,8 @@ class SubjectController extends Controller
                                 ->where('cloquestions.clo_id',$clo->id)
                                 ->get('questions.*','cloquestions.*');
             $questions_array = array();
-            $answer = array();
             foreach ($questions as $question) {
+                $answer = array();
                 if ($question->answer_type == 0) {
                     $answers = Textanswer::get()->where('question_id',$question->id);
                     foreach($answers as $item){
