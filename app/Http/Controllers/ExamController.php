@@ -16,28 +16,28 @@ class ExamController extends Controller
     public function createExam(Request $request)
     {
         // var_dump($request);
-        $data = $request->validate([
-            'title'         =>  'required',
-            'subject_id'    =>  'required|exists:subjects,id',
-            'genration_type'=>  'required|in:1,2',
-            'semester'      =>  'required',
-            'code'          =>  'required',
-            'date'          =>  'required',
-            'year'          =>  'required',
-            'duration'      =>  'required',
-        ]);
+        // $data = $request->validate([
+        //     'title'         =>  'required',
+        //     'subject_id'    =>  'required|exists:subjects,id',
+        //     'genration_type'=>  'required|in:1,2',
+        //     'semester'      =>  'required',
+        //     'code'          =>  'required',
+        //     'date'          =>  'required',
+        //     'year'          =>  'required',
+        //     'duration'      =>  'required',
+        // ]);
         
         $exam = Exam::create([
-            'title'         =>  $data['title'],
-            'subject_id'    =>  $data['subject_id'],
-            'genration_type'=>  $data['genration_type'],
+            'title'         =>  $request->title,
+            'subject_id'    =>  $request->subject_id,
+            'genration_type'=>  $request->genration_type,
             'author_id'     =>  Auth::user()->id,
-            'semester'      =>  $data['semester'],
-            'code'          =>  $data['code'],
-            'date'          =>  $data['date'],
-            'year'          =>  $data['year'],
+            'semester'      =>  $request->semester,
+            'code'          =>  $request->code,
+            'date'          =>  $request->date,
+            'year'          =>  $request->year,
             'status'        =>  0,
-            'duration'      =>  $data['duration'],
+            'duration'      =>  $request->duration,
         ]);
         
         $questions_array = array();
@@ -56,7 +56,7 @@ class ExamController extends Controller
         }else{
             foreach ($request->clos as $clo) {
                 $questions = Question::join('cloquestions','questions.id','=','cloquestions.question_id')
-                                ->where('questions.subject_id',$data['subject_id'])
+                                ->where('questions.subject_id',$request->subject_id)
                                 ->where('cloquestions.clo_id',$clo['clo_id'])
                                 ->get('questions.*','cloquestions.*')->random(floor($request->no_questions*$clo['precentage']));
                           
@@ -80,7 +80,7 @@ class ExamController extends Controller
                 }
                 if(count($questions_array)<$request->no_questions){
                     $another_question = Question::join('cloquestions','questions.id','=','cloquestions.question_id')
-                                ->where('questions.subject_id',$data['subject_id'])
+                                ->where('questions.subject_id',$request->subject_id)
                                 ->where('cloquestions.clo_id',$clo['clo_id'])
                                 ->get('questions.*','cloquestions.*')->random();
                     if($another_question['answer_type']==0){
