@@ -15,7 +15,7 @@ class ExamController extends Controller
 
     public function createExam(Request $request)
     {
-        var_dump($request->all());
+        // var_dump($request);
         // $data = $request->validate([
         //     'title'         =>  'required',
         //     'subject_id'    =>  'required|exists:subjects,id',
@@ -28,7 +28,7 @@ class ExamController extends Controller
         // ]);
         
         $exam = Exam::create([
-            'title'         =>  $request['title'],
+            'title'         =>  $request->title,
             'subject_id'    =>  $request->subject_id,
             'genration_type'=>  $request->genration_type,
             'author_id'     =>  Auth::user()->id,
