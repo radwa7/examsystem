@@ -25,7 +25,6 @@ class ExamController extends Controller
             'date'          =>  'required',
             'year'          =>  'required',
             'duration'      =>  'required',
-            'questions'     =>  'required',
         ]);
         
         $exam = Exam::create([
@@ -42,6 +41,7 @@ class ExamController extends Controller
         ]);
         
         $questions_array = array();
+        $total_score = 0;
         if($request->genration_type == 1){
             foreach ($request->questions as $question) {
                 $key = ExamQuestion::create([
@@ -49,7 +49,8 @@ class ExamController extends Controller
                         'question_id' => $question['id'],
                         'score'       => $question['mark'],
                     ]);
-                array_push($questions_array,$key);          
+                array_push($questions_array,$key); 
+                $total_score = $total_score + $question['mark'];        
             }
             $exam['questions']=$questions_array;
         }else{
@@ -57,21 +58,51 @@ class ExamController extends Controller
                 $questions = Question::join('cloquestions','questions.id','=','cloquestions.question_id')
                                 ->where('questions.subject_id',$data['subject_id'])
                                 ->where('cloquestions.clo_id',$clo['clo_id'])
-                                ->get('questions.*','cloquestions.*')->random(floor($request->no_questions*$clo['precentage']));           
+                                ->get('questions.*','cloquestions.*')->random(floor($request->no_questions*$clo['precentage']));
+                           
                 foreach ($questions as $question ) {
                     $key = ExamQuestion::create([
                         'exam_id'     => $exam['id'],
                         'question_id' => $question['id'],
                         'score'       => null,
                     ]);
-                    array_push($questions_array,$key);  
+                    array_push($questions_array,$key);
+                    if($question['answer_type']==0){
+                        $total_score = $total_score + $request->text_mark;  
+                    }else{
+                        $total_score = $total_score + $request->mcq_mark;  
+                    } 
                 }
-            }
+                if(count($questions_array)<$request->no_questions){
+                    $another_question = Question::join('cloquestions','questions.id','=','cloquestions.question_id')
+                                ->where('questions.subject_id',$data['subject_id'])
+                                ->where('cloquestions.clo_id',$clo['clo_id'])
+                                ->get('questions.*','cloquestions.*')->random();
+                    
+                    $temp = ExamQuestion::create([
+                        'exam_id'     => $exam['id'],
+                        'question_id' => $another_question['id'],
+                        'score'       => null,
+                    ]);
+                    array_push($questions_array,$temp);
+                    if($another_question['answer_type']==0){
+                        $total_score = $total_score + $request->text_mark;  
+                    }else{
+                        $total_score = $total_score + $request->mcq_mark;  
+                    } 
+                }
+
+            };
             
             $exam['questions']=$questions_array;
         }
        
-        return response()->json($exam);
+        $this_exam = Exam::where('id',$exam['id'])->first();
+        $this_exam->update(['total_score'=> $total_score]);
+        $this_exam->update(['status'=> 1]);
+        $this_exam['questions'] = $questions_array;
+
+        return response()->json($this_exam);
     }
 
     public function editExam(Request $request)
