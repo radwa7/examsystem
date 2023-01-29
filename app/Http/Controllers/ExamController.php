@@ -16,16 +16,16 @@ class ExamController extends Controller
     public function createExam(Request $request)
     {
         // var_dump($request);
-        // $data = $request->validate([
-        //     'title'         =>  'required',
-        //     'subject_id'    =>  'required|exists:subjects,id',
-        //     'genration_type'=>  'required|in:1,2',
-        //     'semester'      =>  'required',
-        //     'code'          =>  'required',
-        //     'date'          =>  'required',
-        //     'year'          =>  'required',
-        //     'duration'      =>  'required',
-        // ]);
+        $data = $request->validate([
+            'title'         =>  'required',
+            'subject_id'    =>  'required|exists:subjects,id',
+            'genration_type'=>  'required|in:1,2',
+            'semester'      =>  'required',
+            'code'          =>  'required',
+            'date'          =>  'required',
+            'year'          =>  'required',
+            'duration'      =>  'required',
+        ]);
         
         $exam = Exam::create([
             'title'         =>  $request->title,
