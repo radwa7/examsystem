@@ -150,7 +150,7 @@ class SubjectController extends Controller
     public function assignAll(Request $request)
     {
         $teachersArray = $request->teachersIds;
-        var_dump($teachersArray);
+        // var_dump($teachersArray);
         $array = array();
         foreach($teachersArray as $teacherId){
             
@@ -189,7 +189,7 @@ class SubjectController extends Controller
             array_push($res,$response);
         }
 
-        return response()->json($res);
+        return response()->json($res,200);
 
     }
 
