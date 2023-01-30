@@ -78,34 +78,36 @@ class ExamController extends Controller
                         $total_score = $total_score + $request->mcq_mark;  
                     } 
                 }
-                if(count($questions_array)<$request->no_questions){
-                    $another_question = Question::join('cloquestions','questions.id','=','cloquestions.question_id')
-                                ->where('questions.subject_id',$request->subject_id)
-                                ->where('cloquestions.clo_id',$clo['clo_id'])
-                                ->get('questions.*','cloquestions.*')->random();
-                    if($another_question['answer_type']==0){
-                        $mark = $request->text_mark;
-                    }else{
-                        $mark = $request->mcq_mark;
-                    } 
-                    $temp = ExamQuestion::create([
-                        'exam_id'     => $exam['id'],
-                        'question_id' => $another_question['id'],
-                        'score'       => $mark,
-                    ]);
-                    array_push($questions_array,$temp);
-                    if($another_question['answer_type']==0){
-                        $total_score = $total_score + $request->text_mark;  
-                    }else{
-                        $total_score = $total_score + $request->mcq_mark;  
-                    } 
-                }
+                
 
             };
+            if(count($questions_array)<$request->no_questions && count($questions_array)!=$request->no_questions){
+                $another_question = Question::join('cloquestions','questions.id','=','cloquestions.question_id')
+                            ->where('questions.subject_id',$request->subject_id)
+                            ->where('cloquestions.clo_id',$clo['clo_id'])
+                            ->get('questions.*','cloquestions.*')->random();
+                if($another_question['answer_type']==0){
+                    $mark = $request->text_mark;
+                }else{
+                    $mark = $request->mcq_mark;
+                } 
+                $temp = ExamQuestion::create([
+                    'exam_id'     => $exam['id'],
+                    'question_id' => $another_question['id'],
+                    'score'       => $mark,
+                ]);
+                array_push($questions_array,$temp);
+                if($another_question['answer_type']==0){
+                    $total_score = $total_score + $request->text_mark;  
+                }else{
+                    $total_score = $total_score + $request->mcq_mark;  
+                }
+                
+            }
             
             $exam['questions']=$questions_array;
         }
-       
+        
         $this_exam = Exam::where('id',$exam['id'])->first();
         $this_exam->update(['total_score'=> $total_score]);
         $this_exam->update(['status'=> 1]);
@@ -147,7 +149,7 @@ class ExamController extends Controller
             $total_score = $total_score + $question['mark'];          
         }
         $exam['questions']=$questions_array;
-        
+       
         $this_exam = Exam::where('id',$exam['id'])->first();
         $this_exam->update(['total_score'=> $total_score]);
         $this_exam->update(['status'=> 1]);

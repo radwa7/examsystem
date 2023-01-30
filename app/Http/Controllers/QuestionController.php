@@ -16,7 +16,7 @@ class QuestionController extends Controller
 {
     public function createQuestion(Request $request)
     {
-                
+               
         $question = $request->validate([
             'body'        => 'required|string|unique:questions,body',
             'subject_id'  => 'required|exists:subjects,id',
@@ -97,7 +97,7 @@ class QuestionController extends Controller
             $clo = Clo::findOrFail($clo->clo_id);
             array_push($clo_array,$clo->id);
         }
-        $question['cols'] = $clo_array;
+        $question['clos'] = $clo_array;
 
         $answer = array();
         if ($question->answer_type == 0) {
@@ -132,7 +132,7 @@ class QuestionController extends Controller
                 $clo = Clo::findOrFail($clo->clo_id);
                 array_push($clo_array,$clo->clo_name);
             }
-            $question['cols'] = $clo_array;
+            $question['clos'] = $clo_array;
 
             if ($question->answer_type == 0) {
                 $answers = Textanswer::get()->where('question_id',$question->id);
@@ -168,7 +168,7 @@ class QuestionController extends Controller
                 $clo = Clo::findOrFail($clo->clo_id);
                 array_push($clo_array,$clo->clo_name);
             }
-            $question['cols'] = $clo_array;
+            $question['clos'] = $clo_array;
 
             if ($question->answer_type == 0) {
                 $answers = Textanswer::get()->where('question_id',$question->id);
@@ -205,7 +205,7 @@ class QuestionController extends Controller
                 $clo = Clo::findOrFail($clo->clo_id);
                 array_push($clo_array,$clo->clo_name);
             }
-            $question['cols'] = $clo_array;
+            $question['clos'] = $clo_array;
 
             if ($question->answer_type == 0) {
                 $answers = Textanswer::get()->where('question_id',$question->id);
@@ -242,7 +242,7 @@ class QuestionController extends Controller
                 $clo = Clo::findOrFail($clo->clo_id);
                 array_push($clo_array,$clo->clo_name);
             }
-            $question['cols'] = $clo_array;
+            $question['clos'] = $clo_array;
 
             if ($question->answer_type == 0) {
                 $answers = Textanswer::get()->where('question_id',$question->id);
@@ -282,7 +282,7 @@ class QuestionController extends Controller
                 $clo = Clo::findOrFail($clo->clo_id);
                 array_push($clo_array,$clo->clo_name);
             }
-            $question['cols'] = $clo_array;
+            $question['clos'] = $clo_array;
 
 
             if ($question->answer_type == 0) {
@@ -307,25 +307,27 @@ class QuestionController extends Controller
 
     public function editQuestion(Request $request)
     {
+        // var_dump($request);
         $question = Question::findOrFail($request->question_id); 
-        $subject = Subject::findOrFail($question->subject_id);
-        $question['subject'] = $subject->subject_name;
+        // var_dump($question);
+        // $subject = Subject::findOrFail($question->subject_id);
+        // $question['subject'] = $subject->subject_name;
         
-        $clos = Cloquestion::all()->where('question_id',$question->id);
-        $clo_array = array();
-        foreach($clos as $clo){
-            $clo = Clo::findOrFail($clo->clo_id);
-            array_push($clo_array,$clo->clo_name);
-        }
-        $question['cols'] = $clo_array;
+        // $clos = Cloquestion::all()->where('question_id',$question->id);
+        // $clo_array = array();
+        // foreach($clos as $clo){
+        //     $clo = Clo::findOrFail($clo->clo_id);
+        //     array_push($clo_array,$clo->clo_name);
+        // }
+        // $question['clos'] = $clo_array;
 
 
-        if ($question->answer_type == 0) {
-            $answer = Textanswer::get()->where('question_id',$question->id);
-        }else{
-            $answer = Mcqanswer::all()->where('question_id',$question->id) ;
-        }
-        $question['answer'] = $answer;
+        // if ($question->answer_type == 0) {
+        //     $answer = Textanswer::get()->where('question_id',$question->id);
+        // }else{
+        //     $answer = Mcqanswer::all()->where('question_id',$question->id) ;
+        // }
+        // $question['answer'] = $answer;
         
         $new_question = $request->validate([
             'body'        => 'required|string|unique:questions,body',
@@ -334,8 +336,14 @@ class QuestionController extends Controller
             'answer_type' => 'required|' .Rule::in([0,1]),
            
         ]);  
-
-        $question->update($new_question);
+        // var_dump($new_question);
+        $question->update([
+            'body' => $new_question['body'],
+            'subject_id' => $new_question['subject_id'],
+            'level' => $new_question['level'],
+            'answer_type' => $new_question['answer_type'],
+            'author_id'   => Auth::user()->id,
+        ]);
         self::editQuestionAnswer($request);
         self::editQuestionClo($request);
         return response()->json(
@@ -359,9 +367,10 @@ class QuestionController extends Controller
             $answer = Textanswer::find($ques->id);
             $answer->update($request->all());
         }else{
-            $answer = Mcqanswer::find($ques->id);
+            $answer = Mcqanswer::where('question_id',$ques->id)->get();
             foreach($answer as $mcq){
-                $mcq->update($request->all());
+                
+                $mcq->update([$request->all()]);
             }
         }
         return response()->json([
