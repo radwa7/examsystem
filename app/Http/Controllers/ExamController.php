@@ -53,13 +53,30 @@ class ExamController extends Controller
                 $total_score = $total_score + $question['mark'];        
             }
             $exam['questions']=$questions_array;
+            $message = "created successfully";
         }else{
             foreach ($request->clos as $clo) {
-                $questions = Question::join('cloquestions','questions.id','=','cloquestions.question_id')
-                                ->where('questions.subject_id',$request->subject_id)
-                                ->where('cloquestions.clo_id',$clo['clo_id'])
-                                ->get('questions.*','cloquestions.*')->random(floor($request->no_questions*$clo['precentage']));
-                          
+                $cloQuestNum = Question::join('cloquestions','questions.id','=','cloquestions.question_id')
+                ->where('questions.subject_id',$request->subject_id)
+                ->where('cloquestions.clo_id',$clo['clo_id'])
+                ->get('questions.*','cloquestions.*')->count();
+                if (floor($request->no_questions*$clo['precentage'])>$cloQuestNum) {
+                    $quesNum = $request->no_questions;
+                    while(floor($quesNum*$clo['precentage'])>$cloQuestNum){
+                        $quesNum--;
+                    }
+                    $questions = Question::join('cloquestions','questions.id','=','cloquestions.question_id')
+                                    ->where('questions.subject_id',$request->subject_id)
+                                    ->where('cloquestions.clo_id',$clo['clo_id'])
+                                    ->get('questions.*','cloquestions.*')->random(floor($quesNum*$clo['precentage']));
+                    $message = "not enough questions available";
+                }elseif(floor($request->no_questions*$clo['precentage'])<=$cloQuestNum){
+                    $questions = Question::join('cloquestions','questions.id','=','cloquestions.question_id')
+                                    ->where('questions.subject_id',$request->subject_id)
+                                    ->where('cloquestions.clo_id',$clo['clo_id'])
+                                    ->get('questions.*','cloquestions.*')->random(floor($request->no_questions*$clo['precentage']));   
+                    $message = "created successfully";                 
+                }
                 foreach ($questions as $question ) {
                     if($question['answer_type']==0){
                         $mark = $request->text_mark;
@@ -78,7 +95,6 @@ class ExamController extends Controller
                         $total_score = $total_score + $request->mcq_mark;  
                     } 
                 }
-                
 
             };
             if(count($questions_array)<$request->no_questions && count($questions_array)!=$request->no_questions){
@@ -113,7 +129,10 @@ class ExamController extends Controller
         $this_exam->update(['status'=> 1]);
         $this_exam['questions'] = $questions_array;
 
-        return response()->json($this_exam);
+        return response()->json([
+            'exam'=>$this_exam,
+            'messsage'=> $message
+        ],200);
     }
 
     public function editExam(Request $request)
