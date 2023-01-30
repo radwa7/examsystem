@@ -118,7 +118,7 @@ class ExamController extends Controller
 
     public function editExam(Request $request)
     {
-        var_dump($request);
+        // var_dump($request);
         $new_exam = $request->validate([
             'id'            =>  'required|exists:exams,id',
             'title'         =>  'required',
@@ -129,7 +129,6 @@ class ExamController extends Controller
             'date'          =>  'required',
             'year'          =>  'required',
             'duration'      =>  'required',
-            'clos'          =>  'required',
         ]);
 
         $exam = Exam::findOrFail($request->id);
