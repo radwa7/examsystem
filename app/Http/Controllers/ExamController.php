@@ -118,6 +118,7 @@ class ExamController extends Controller
 
     public function editExam(Request $request)
     {
+        var_dump($request);
         $new_exam = $request->validate([
             'id'            =>  'required|exists:exams,id',
             'title'         =>  'required',

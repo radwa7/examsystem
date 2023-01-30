@@ -353,11 +353,8 @@ class QuestionController extends Controller
 
     public function editQuestionClo($request)
     {
-        $questionClos = Cloquestion::where('clo_id',$request->question_id)->get();
-        foreach($questionClos as $questionClo){
-
-            $questionClo->delete();
-        }
+        $questionClos = Cloquestion::where('question_id',$request->question_id)->delete();
+    
         foreach ($request->clos as $clo ) {
             
             $clo = Cloquestion::create([
@@ -373,15 +370,28 @@ class QuestionController extends Controller
 
     public function editQuestionAnswer($request)
     {
-        $ques = Question::findOrFail($request->question_id);
-        if ($ques->answer_type == 0) {
-            $answer = Textanswer::find($ques->id);
-            $answer->update($request->all());
-        }else{
-            $answer = Mcqanswer::where('question_id',$ques->id)->get();
-            foreach($answer as $mcq){
+        
+        if ($request->answer_type == 0) {
+            $answer = Textanswer::where('question_id',$request->question_id)->delete();
+            $answer = $request->validate([
+                'answer_body' => 'required|string'
                 
-                $mcq->update([$request->all()]);
+            ]);
+
+            $answer = Textanswer::create([
+                'body'        => $answer['answer_body'],
+                'question_id' => $request->question_id,
+            ]);
+        }else{
+            $answer = Mcqanswer::where('question_id',$request->question_id)->delete();
+            foreach($request->mcqs as $mcq){
+                
+                $mcq = Mcqanswer::create([
+                    'question_id' => $request->question_id,
+                    'body'        => $mcq['body'],
+                    'status'      => $mcq['status'], 
+                ]);
+                
             }
         }
         return response()->json([
