@@ -42,22 +42,10 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::post('createSubject',[App\Http\Controllers\SubjectController::class,'createSub']);
         Route::get('getSubjects',[App\Http\Controllers\SubjectController::class,'getSubjects']);
         Route::post('getSubject',[App\Http\Controllers\SubjectController::class,'getSubject']);
-        Route::post('getSubjectDetails',[App\Http\Controllers\SubjectController::class,'getSubjectDetails']);
         Route::post('editSubject',[App\Http\Controllers\SubjectController::class,'editSubject']);
         Route::post('deleteSubject',[App\Http\Controllers\SubjectController::class,'deleteSubject']);
         Route::post('assignSub',[App\Http\Controllers\SubjectController::class,'assignSub']);
-        Route::post('{
-            "id" : 1,
-            "questions" : [{"id":1,"mark":3},{"id":2,"mark":2}],
-            "title" : "test 1",
-            "subject_id": 1 ,
-            "genration_type": 1,
-            "semester" :"sem" ,
-            "code" : "code",
-            "date"  :"2023-01-01",
-            "year" : "2023",
-            "duration" : "2 hours"
-        }',[App\Http\Controllers\SubjectController::class,'assignAll']);
+        Route::post('assignAll',[App\Http\Controllers\SubjectController::class,'assignAll']);
 
         //Exams
         Route::post('/getExamBySub', [App\Http\Controllers\ExamController::class,'getExamBySub']);
@@ -100,7 +88,8 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::post('/getExamByAuthorSub', [App\Http\Controllers\ExamController::class,'getExamByAuthorSub']);
     
     
-    
+    //subject
+    Route::post('getSubjectDetails',[App\Http\Controllers\SubjectController::class,'getSubjectDetails']);
 
     
     
