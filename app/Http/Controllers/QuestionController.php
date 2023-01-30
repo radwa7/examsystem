@@ -330,13 +330,13 @@ class QuestionController extends Controller
         // $question['answer'] = $answer;
         
         $new_question = $request->validate([
-            'body'        => 'required|string|unique:questions,body',
+            'body'        => 'required|string|',
             'subject_id'  => 'required|exists:subjects,id',
             'level'       => 'required|' . Rule::in([0,1,2]),
             'answer_type' => 'required|' .Rule::in([0,1]),
            
         ]);  
-        // var_dump($new_question);
+        
         $question->update([
             'body' => $new_question['body'],
             'subject_id' => $new_question['subject_id'],
@@ -353,8 +353,19 @@ class QuestionController extends Controller
 
     public function editQuestionClo($request)
     {
-        $questionClo = Cloquestion::find($request->question_id);
-        $questionClo->clo_id->update($request->clo_id);
+        $questionClos = Cloquestion::where('clo_id',$request->question_id)->get();
+        foreach($questionClos as $questionClo){
+
+            $questionClo->delete();
+        }
+        foreach ($request->clos as $clo ) {
+            
+            $clo = Cloquestion::create([
+                'clo_id'      => $clo,
+                'question_id' => $request->question_id,
+            ]);
+            
+        }
         return response()->json(
             ['message'=>'question clo updated']
         ,200);
